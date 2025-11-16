@@ -72,6 +72,7 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    'google-doc-imports': GoogleDocImport;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -94,6 +95,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'google-doc-imports': GoogleDocImportsSelect<false> | GoogleDocImportsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -779,6 +781,43 @@ export interface Form {
   createdAt: string;
 }
 /**
+ * Import, sync, and manage all your Google Docs. Use the management page at /admin/google-docs for importing.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "google-doc-imports".
+ */
+export interface GoogleDocImport {
+  id: number;
+  title: string;
+  /**
+   * The Google Doc ID from the URL
+   */
+  googleDocId: string;
+  /**
+   * Full Google Doc URL (optional, for reference)
+   */
+  googleDocUrl?: string | null;
+  /**
+   * The Payload CMS post created from this Google Doc
+   */
+  post: number | Post;
+  /**
+   * When this document was last synced/imported
+   */
+  lastSyncedAt?: string | null;
+  status: 'active' | 'error' | 'syncing';
+  /**
+   * Error message if sync failed
+   */
+  errorMessage?: string | null;
+  /**
+   * Number of images imported
+   */
+  imagesCount?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -987,6 +1026,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'google-doc-imports';
+        value: number | GoogleDocImport;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1352,6 +1395,22 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "google-doc-imports_select".
+ */
+export interface GoogleDocImportsSelect<T extends boolean = true> {
+  title?: T;
+  googleDocId?: T;
+  googleDocUrl?: T;
+  post?: T;
+  lastSyncedAt?: T;
+  status?: T;
+  errorMessage?: T;
+  imagesCount?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
