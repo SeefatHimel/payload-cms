@@ -8,6 +8,7 @@ import { parseGoogleDocToLexical } from '@/utilities/googleDocsParser'
 import { extractImagesFromExportedDoc } from '@/utilities/googleDocsImageHandler'
 import { extractGoogleDocId, isValidGoogleDocId } from '@/utilities/extractGoogleDocId'
 import { google } from 'googleapis'
+import type { Post } from '@/payload-types'
 
 export const maxDuration = 300 // 5 minutes for large documents
 
@@ -68,10 +69,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       version: 'v1', 
       auth: oauth2Client
     })
-    const drive = google.drive({ 
-      version: 'v3', 
-      auth: oauth2Client
-    })
+    // Drive API not currently used, but kept for future image extraction from Drive
+    // const drive = google.drive({ 
+    //   version: 'v3', 
+    //   auth: oauth2Client
+    // })
 
     // Fetch Google Doc with timeout handling
     console.log(`[Import] Fetching Google Doc: ${docId}`)
@@ -146,9 +148,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         
         const filename = `google-doc-image-${Date.now()}.${extension}`
 
-        // Upload to Payload
-        const blob = new Blob([imageBuffer], { type: contentType })
-        const file = new File([blob], filename, { type: contentType })
+        // Upload to Payload - create Payload-compatible file object
+        // Payload expects: { name, data (Buffer), mimetype, size }
+        const file: { name: string; data: Buffer; mimetype: string; size: number } = {
+          name: filename,
+          data: imageBuffer,
+          mimetype: contentType,
+          size: imageBuffer.length,
+        }
 
         const media = await payload.create({
           collection: 'media',
@@ -216,7 +223,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         id: existingPostId,
         data: {
           title,
-          content: contentWithImages,
+          content: contentWithImages as unknown as Post['content'],
         },
         req: payloadReqForCreate,
       })
@@ -242,9 +249,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         collection: 'posts',
         data: {
           title,
-          content: contentWithImages,
-          _status: 'draft', // Import as draft so user can review
+          content: contentWithImages as unknown as Post['content'],
         },
+        draft: true, // Import as draft so user can review
         req: payloadReqForCreate,
       })
 

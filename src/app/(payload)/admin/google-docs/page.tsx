@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from '@payloadcms/ui'
 import { cn } from '@/utilities/ui'
-import { FileText, RefreshCw, Plus, ExternalLink, Image as ImageIcon, Clock } from 'lucide-react'
+import { FileText, ExternalLink, Image as ImageIcon, Clock } from 'lucide-react'
 import GoogleDocsImporter from '@/components/GoogleDocsImporter'
 import './page.scss'
 
