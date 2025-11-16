@@ -19,6 +19,7 @@ export interface LexicalNode {
   indent?: number
   tag?: string
   textFormat?: number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fields?: any
 }
 
@@ -66,9 +67,10 @@ function getHeadingTag(paragraphStyle: docs_v1.Schema$ParagraphStyle | undefined
 
 /**
  * Check if paragraph is a list item
+ * @deprecated Not currently used
  */
-function isListItem(paragraph: docs_v1.Schema$Paragraph): boolean {
-  return !!paragraph.bullet || !!paragraph.orderedListId
+function _isListItem(paragraph: docs_v1.Schema$Paragraph): boolean {
+  return !!paragraph.bullet
 }
 
 /**
@@ -101,14 +103,14 @@ function parseTextRun(run: docs_v1.Schema$TextRun): LexicalNode {
  */
 function parseParagraph(
   paragraph: docs_v1.Schema$Paragraph,
-  doc: docs_v1.Schema$Document
+  _doc: docs_v1.Schema$Document
 ): LexicalNode | null {
   if (!paragraph.elements || paragraph.elements.length === 0) {
     return null
   }
 
   const headingTag = getHeadingTag(paragraph.paragraphStyle)
-  const isList = isListItem(paragraph)
+  // const isList = isListItem(paragraph) // Not currently used
   const nestingLevel = getListNestingLevel(paragraph)
 
   // Parse text elements

@@ -10,6 +10,7 @@ export async function GET(): Promise<NextResponse> {
     const oauth2Client = getOAuth2Client()
     
     // Get the redirect URI from the client
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const redirectUri = (oauth2Client as any).redirectUri_ || 
                        process.env.GOOGLE_REDIRECT_URL || 
                        `${process.env.PAYLOAD_PUBLIC_SERVER_URL || process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/api/google-oauth/callback`

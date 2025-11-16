@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { toast } from '@payloadcms/ui'
 import { extractGoogleDocId, isValidGoogleDocId } from '@/utilities/extractGoogleDocId'
 
@@ -12,6 +13,7 @@ interface ImportResult {
     slug: string
   }
   imagesProcessed?: number
+  isUpdate?: boolean
   error?: string
   details?: string
 }
@@ -222,12 +224,12 @@ export const GoogleDocsImporter: React.FC<{ onImportSuccess?: () => void }> = ({
                 >
                   View Post
                 </a>
-                <a
+                <Link
                   href="/admin/google-docs"
                   style={{ color: '#155724', textDecoration: 'underline' }}
                 >
                   Manage Imports
-                </a>
+                </Link>
               </div>
               {result.imagesProcessed !== undefined && (
                 <p style={{ marginTop: '8px', marginBottom: 0 }}>Images processed: {result.imagesProcessed}</p>

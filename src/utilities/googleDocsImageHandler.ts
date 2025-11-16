@@ -11,11 +11,13 @@ import type { docs_v1 } from 'googleapis'
 
 /**
  * Download image from Google Drive
+ * @deprecated Not currently used
  */
-async function downloadImageFromDrive(
+async function _downloadImageFromDrive(
   fileId: string,
   accessToken: string
 ): Promise<Buffer> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const drive = google.drive({ version: 'v3', auth: { getAccessToken: async () => accessToken } as any })
   
   const response = await drive.files.get(
@@ -33,13 +35,15 @@ async function downloadImageFromDrive(
 
 /**
  * Get image from Google Docs inline object
+ * @deprecated Not currently used
  */
-async function getImageFromInlineObject(
+async function _getImageFromInlineObject(
   docId: string,
   inlineObjectId: string,
   accessToken: string
 ): Promise<Buffer | null> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const docs = google.docs({ version: 'v1', auth: { getAccessToken: async () => accessToken } as any })
     
     // Get the document to find the inline object
@@ -54,11 +58,11 @@ async function getImageFromInlineObject(
 
     // Extract file ID from content URI
     // Google Docs stores images in Drive, we need to extract the file ID
-    const contentUri = inlineObject.inlineObjectProperties.embeddedObject.imageProperties.contentUri
+    // const contentUri = inlineObject.inlineObjectProperties.embeddedObject.imageProperties.contentUri
     
     // Try to extract file ID from URI or use alternative method
     // For now, we'll try to get it from the embedded object
-    const embeddedObject = inlineObject.inlineObjectProperties.embeddedObject
+    // const embeddedObject = inlineObject.inlineObjectProperties.embeddedObject
     
     // Alternative: Get image via Drive API using the document's images
     // We'll need to list files in Drive or use a different approach
@@ -74,17 +78,23 @@ async function getImageFromInlineObject(
 
 /**
  * Upload image to Payload CMS media collection
+ * @deprecated Not currently used
  */
-async function uploadImageToPayload(
+async function _uploadImageToPayload(
   payload: Payload,
   req: PayloadRequest,
   imageBuffer: Buffer,
   filename: string,
   alt?: string
 ): Promise<number> {
-  // Create a File object from buffer
-  const blob = new Blob([imageBuffer])
-  const file = new File([blob], filename, { type: 'image/png' })
+  // Create Payload-compatible file object
+  // Payload expects: { name, data (Buffer), mimetype, size }
+  const file: { name: string; data: Buffer; mimetype: string; size: number } = {
+    name: filename,
+    data: imageBuffer,
+    mimetype: 'image/png',
+    size: imageBuffer.length,
+  }
 
   // Upload to Payload
   const media = await payload.create({
@@ -105,10 +115,10 @@ async function uploadImageToPayload(
  */
 export async function processGoogleDocImages(
   doc: docs_v1.Schema$Document,
-  docId: string,
-  accessToken: string,
-  payload: Payload,
-  req: PayloadRequest
+  _docId: string,
+  _accessToken: string,
+  _payload: Payload,
+  _req: PayloadRequest
 ): Promise<Map<string, number>> {
   const imageMap = new Map<string, number>()
 
@@ -151,6 +161,7 @@ export async function processGoogleDocImages(
  */
 export async function extractImagesFromExportedDoc(
   docId: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   oauth2Client: any
 ): Promise<Array<{ url: string; alt?: string; inlineObjectId?: string }>> {
   try {
@@ -206,7 +217,11 @@ export async function extractImagesFromExportedDoc(
 /**
  * Download image from URL (handles both Google Drive URLs and direct URLs)
  */
-export async function downloadImageFromUrl(url: string, oauth2Client: any): Promise<Buffer | null> {
+export async function downloadImageFromUrl(
+  url: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  oauth2Client: any
+): Promise<Buffer | null> {
   try {
     // Get access token from the OAuth client
     const accessToken = await oauth2Client.getAccessToken()

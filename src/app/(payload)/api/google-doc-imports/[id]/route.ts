@@ -5,7 +5,7 @@ import { headers } from 'next/headers'
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const payload = await getPayload({ config })
   const requestHeaders = await headers()
@@ -21,7 +21,7 @@ export async function PATCH(
   }
 
   try {
-    const { id } = params
+    const { id } = await params
     const body = await request.json()
 
     const result = await payload.update({
