@@ -16,6 +16,11 @@ import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
 export async function generateStaticParams() {
+  // Skip static generation if database is not configured
+  if (!process.env.DATABASE_URI) {
+    return []
+  }
+  
   try {
     const payload = await getPayload({ config: configPromise })
     const posts = await payload.find({

@@ -70,6 +70,11 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 }
 
 export async function generateStaticParams() {
+  // Skip static generation if database is not configured
+  if (!process.env.DATABASE_URI) {
+    return []
+  }
+  
   try {
     const payload = await getPayload({ config: configPromise })
     const { totalDocs } = await payload.count({
