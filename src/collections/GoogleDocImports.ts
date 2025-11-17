@@ -85,6 +85,14 @@ export const GoogleDocImports: CollectionConfig = {
         description: 'Number of images imported',
       },
     },
+    {
+      name: 'useAI',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        description: 'Use AI formatting when syncing this document',
+      },
+    },
   ],
   hooks: {
     beforeChange: [

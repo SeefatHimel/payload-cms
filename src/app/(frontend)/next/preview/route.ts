@@ -8,7 +8,23 @@ import { NextRequest } from 'next/server'
 import configPromise from '@payload-config'
 
 export async function GET(req: NextRequest): Promise<Response> {
-  const payload = await getPayload({ config: configPromise })
+  let payload
+  
+  try {
+    // Get payload with timeout handling
+    payload = await Promise.race([
+      getPayload({ config: configPromise }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+      ) as Promise<never>
+    ])
+  } catch (error) {
+    console.error('[Preview] Database connection error:', error)
+    return new Response(
+      'Database connection failed. Please try again in a moment.',
+      { status: 503 }
+    )
+  }
 
   const { searchParams } = new URL(req.url)
 
@@ -39,11 +55,18 @@ export async function GET(req: NextRequest): Promise<Response> {
   let user
 
   try {
-    user = await payload.auth({
-      req: req as unknown as PayloadRequest,
-      headers: req.headers,
-    })
+    // Add timeout for auth check as well
+    user = await Promise.race([
+      payload.auth({
+        req: req as unknown as PayloadRequest,
+        headers: req.headers,
+      }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Authentication timeout')), 10000)
+      ) as Promise<never>
+    ])
   } catch (error) {
+    console.error('[Preview] Auth error:', error)
     payload.logger.error({ err: error }, 'Error verifying token for live preview')
     return new Response('You are not allowed to preview this page', { status: 403 })
   }

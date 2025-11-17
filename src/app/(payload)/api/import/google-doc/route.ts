@@ -7,10 +7,122 @@ import { getAccessToken } from '@/utilities/googleOAuth'
 import { parseGoogleDocToLexical } from '@/utilities/googleDocsParser'
 import { extractImagesFromExportedDoc } from '@/utilities/googleDocsImageHandler'
 import { extractGoogleDocId, isValidGoogleDocId } from '@/utilities/extractGoogleDocId'
+import { enhanceContentQuality } from '@/utilities/aiFormatter'
+import { parseMarkdownToLexical } from '@/utilities/markdownToLexical'
 import { google } from 'googleapis'
 import type { Post } from '@/payload-types'
 
 export const maxDuration = 300 // 5 minutes for large documents
+
+/**
+ * Enhance text content in Lexical nodes while preserving structure
+ * Maps enhanced text back to original nodes by matching content
+ */
+function enhanceTextInLexicalNodes(
+  originalLexical: any,
+  originalText: string,
+  enhancedText: string
+): any {
+  // Split both texts into lines/paragraphs for mapping
+  const originalLines = originalText.split('\n').filter(line => line.trim())
+  const enhancedLines = enhancedText.split('\n').filter(line => line.trim())
+  
+  // If line counts don't match, return original (structure changed)
+  if (originalLines.length !== enhancedLines.length) {
+    console.warn(`[Import] ⚠️ Line count mismatch - preserving original structure`)
+    return originalLexical
+  }
+  
+  // Create a mapping of original to enhanced text (by position)
+  const textMap = new Map<string, string>()
+  for (let i = 0; i < originalLines.length; i++) {
+    const original = originalLines[i].trim()
+    const enhanced = enhancedLines[i].trim()
+    if (original && enhanced && original !== enhanced) {
+      textMap.set(original, enhanced)
+    }
+  }
+  
+  // If no changes detected, return original
+  if (textMap.size === 0) {
+    console.log(`[Import] ℹ️  No text changes detected - using original content`)
+    return originalLexical
+  }
+  
+  // Recursively update text nodes in Lexical structure
+  function updateTextNodes(node: any): any {
+    if (node.type === 'text' && node.text) {
+      const nodeText = node.text
+      let updatedText = nodeText
+      
+      // Try to find and replace matching text segments
+      for (const [original, enhanced] of textMap.entries()) {
+        // Only replace if the text segment appears in this node
+        if (nodeText.includes(original)) {
+          updatedText = nodeText.replace(original, enhanced)
+          break // Only replace first match to avoid over-replacement
+        }
+      }
+      
+      // Only update if text actually changed
+      if (updatedText !== nodeText) {
+        return {
+          ...node,
+          text: updatedText
+        }
+      }
+      return node
+    }
+    
+    if (node.children && Array.isArray(node.children)) {
+      return {
+        ...node,
+        children: node.children.map(updateTextNodes)
+      }
+    }
+    
+    return node
+  }
+  
+  return {
+    root: {
+      ...originalLexical.root,
+      children: originalLexical.root.children.map(updateTextNodes)
+    }
+  }
+}
+
+/**
+ * Extract plain text from Lexical JSON structure for AI processing
+ */
+function extractTextFromLexical(lexical: any): string {
+  if (!lexical?.root?.children) {
+    return ''
+  }
+
+  const extractText = (node: any): string => {
+    if (node.type === 'text' && node.text) {
+      return node.text
+    }
+
+    if (node.children && Array.isArray(node.children)) {
+      return node.children.map(extractText).join('')
+    }
+
+    return ''
+  }
+
+  const paragraphs: string[] = []
+  
+  for (const child of lexical.root.children) {
+    const text = extractText(child)
+    if (text.trim()) {
+      paragraphs.push(text.trim())
+    }
+  }
+
+  return paragraphs.join('\n\n')
+}
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const payload = await getPayload({ config })
@@ -28,7 +140,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const body = await request.json()
-    const { docId: inputDocId } = body
+    const { docId: inputDocId, useAI = false } = body
+    
+    // Log AI configuration status
+    const hasApiKey = !!process.env.GOOGLE_AI_API_KEY
+    console.log(`[Import] 🔧 AI Configuration:`)
+    console.log(`[Import]    - useAI requested: ${useAI}`)
+    console.log(`[Import]    - GOOGLE_AI_API_KEY set: ${hasApiKey}`)
+    if (hasApiKey) {
+      console.log(`[Import]    - Model: ${process.env.GOOGLE_AI_MODEL || 'gemini-2.0-flash-exp'}`)
+    }
 
     if (!inputDocId || typeof inputDocId !== 'string') {
       return NextResponse.json(
@@ -98,8 +219,60 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Parse document to Lexical format
     console.log(`[Import] Parsing document to Lexical format`)
-    const lexicalContent = parseGoogleDocToLexical(doc)
+    let lexicalContent = parseGoogleDocToLexical(doc)
     console.log(`[Import] Parsed ${lexicalContent.root.children.length} content blocks`)
+
+    // Optional AI enhancement
+    if (useAI && process.env.GOOGLE_AI_API_KEY) {
+      try {
+        console.log(`[Import] 🤖 ========================================`)
+        console.log(`[Import] 🤖 AI FORMATTING ENABLED - Using Google Gemini`)
+        console.log(`[Import] 🤖 ========================================`)
+        
+        // Extract text from Lexical for AI processing
+        const textContent = extractTextFromLexical(lexicalContent)
+        console.log(`[Import] 📝 Extracted ${textContent.length} characters from Lexical content`)
+        
+        if (textContent.trim().length === 0) {
+          console.warn(`[Import] ⚠️ No text content to enhance, skipping AI formatting`)
+        } else {
+          // Enhance text content with AI (preserves structure, improves text quality)
+          const enhancedText = await enhanceContentQuality(textContent, 'blog post')
+          
+          // Instead of replacing the entire structure, enhance text within existing nodes
+          // This preserves original formatting, spacing, and design
+          console.log(`[Import] 🔄 Enhancing text content while preserving original structure...`)
+          lexicalContent = enhanceTextInLexicalNodes(lexicalContent, textContent, enhancedText)
+          
+          // Log AI usage results
+          console.log(`[Import] ✅ ========================================`)
+          console.log(`[Import] ✅ AI TEXT ENHANCEMENT COMPLETED`)
+          console.log(`[Import] ✅ ========================================`)
+          console.log(`[Import] 📊 Content transformation:`)
+          console.log(`[Import]    - Original: ${textContent.length} characters`)
+          console.log(`[Import]    - Enhanced: ${enhancedText.length} characters`)
+          console.log(`[Import]    - Change: ${enhancedText.length - textContent.length > 0 ? '+' : ''}${enhancedText.length - textContent.length} characters`)
+          console.log(`[Import]    - Structure preserved: ✅ Original formatting maintained`)
+        }
+      } catch (aiError) {
+        console.error(`[Import] ❌ ========================================`)
+        console.error(`[Import] ❌ AI ENHANCEMENT FAILED`)
+        console.error(`[Import] ❌ ========================================`)
+        console.error(`[Import] Error:`, aiError)
+        if (aiError instanceof Error) {
+          console.error(`[Import] Error message:`, aiError.message)
+          console.error(`[Import] Error stack:`, aiError.stack)
+        }
+        console.warn(`[Import] ⚠️ Continuing with original content (no AI enhancement)`)
+      }
+    } else if (useAI && !process.env.GOOGLE_AI_API_KEY) {
+      console.warn(`[Import] ⚠️ ========================================`)
+      console.warn(`[Import] ⚠️ AI FORMATTING REQUESTED BUT API KEY NOT SET`)
+      console.warn(`[Import] ⚠️ ========================================`)
+      console.warn(`[Import] Set GOOGLE_AI_API_KEY in your .env file to enable AI formatting`)
+    } else if (!useAI) {
+      console.log(`[Import] ℹ️  AI formatting not requested (useAI: false)`)
+    }
 
     // Process images (optional - continue even if this fails)
     let images: Array<{ url: string; alt?: string; inlineObjectId?: string }> = []
@@ -238,6 +411,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           status: 'active',
           imagesCount: imageMap.size,
           errorMessage: undefined,
+          useAI: useAI, // Update AI preference
         },
         req: payloadReqForCreate,
       })
@@ -266,6 +440,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           lastSyncedAt: new Date().toISOString(),
           status: 'active',
           imagesCount: imageMap.size,
+          useAI: useAI, // Save AI preference
         },
         req: payloadReqForCreate,
       })

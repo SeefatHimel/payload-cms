@@ -17,6 +17,7 @@ interface GoogleDocImport {
   status: 'active' | 'error' | 'syncing'
   errorMessage?: string
   imagesCount?: number
+  useAI?: boolean
   updatedAt: string
 }
 
@@ -51,9 +52,17 @@ export default function GoogleDocsPage() {
     }
   }
 
-  const handleSync = async (importId: number, docId: string) => {
+  const handleSync = async (importId: number, docId: string, useAI?: boolean) => {
     try {
       setSyncing((prev) => new Set(prev).add(importId))
+      
+      // Get the import record to check useAI preference
+      const importRecord = imports.find(imp => imp.id === importId)
+      // Use the preference from the record, or the passed value, or default to true
+      // (API key check happens server-side)
+      const shouldUseAI = useAI !== undefined 
+        ? useAI 
+        : (importRecord?.useAI ?? true)
       
       // Update status to syncing
       await fetch(`/api/google-doc-imports/${importId}`, {
@@ -65,14 +74,14 @@ export default function GoogleDocsPage() {
         body: JSON.stringify({ status: 'syncing' }),
       })
 
-      // Trigger sync
+      // Trigger sync with AI preference
       const response = await fetch('/api/import/google-doc', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ docId }),
+        body: JSON.stringify({ docId, useAI: shouldUseAI }),
       })
 
       const result = await response.json()
@@ -297,14 +306,44 @@ export default function GoogleDocsPage() {
                     </div>
                   </td>
                   <td style={{ textAlign: 'center' }}>
-                    <button
-                      className="btn btn--style-secondary btn--size-small"
-                      onClick={() => handleSync(importItem.id, importItem.googleDocId)}
-                      disabled={syncing.has(importItem.id)}
-                      type="button"
-                    >
-                      {syncing.has(importItem.id) ? 'Syncing...' : 'Sync'}
-                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        id={`useAI-${importItem.id}`}
+                        checked={importItem.useAI ?? true}
+                        onChange={async (e) => {
+                          // Update the useAI preference in the database
+                          try {
+                            await fetch(`/api/google-doc-imports/${importItem.id}`, {
+                              method: 'PATCH',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              credentials: 'include',
+                              body: JSON.stringify({ useAI: e.target.checked }),
+                            })
+                            // Refresh the list to show updated preference
+                            await fetchImports()
+                          } catch (error) {
+                            console.error('Error updating AI preference:', error)
+                            toast.error('Failed to update AI preference')
+                          }
+                        }}
+                        style={{ cursor: 'pointer' }}
+                        title="Toggle AI formatting for this document"
+                      />
+                      <label htmlFor={`useAI-${importItem.id}`} style={{ cursor: 'pointer', fontSize: '12px' }} title="AI Formatting">
+                        🤖
+                      </label>
+                      <button
+                        className="btn btn--style-secondary btn--size-small"
+                        onClick={() => handleSync(importItem.id, importItem.googleDocId, importItem.useAI)}
+                        disabled={syncing.has(importItem.id)}
+                        type="button"
+                      >
+                        {syncing.has(importItem.id) ? (importItem.useAI ? 'Syncing with AI...' : 'Syncing...') : 'Sync'}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

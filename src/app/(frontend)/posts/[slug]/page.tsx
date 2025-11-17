@@ -101,20 +101,36 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
 
-  const payload = await getPayload({ config: configPromise })
+  try {
+    const payload = await Promise.race([
+      getPayload({ config: configPromise }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+      ) as Promise<never>
+    ])
 
-  const result = await payload.find({
-    collection: 'posts',
-    draft,
-    limit: 1,
-    overrideAccess: draft,
-    pagination: false,
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-  })
+    const result = await Promise.race([
+      payload.find({
+        collection: 'posts',
+        draft,
+        limit: 1,
+        overrideAccess: draft,
+        pagination: false,
+        where: {
+          slug: {
+            equals: slug,
+          },
+        },
+      }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Query timeout')), 10000)
+      ) as Promise<never>
+    ])
 
-  return result.docs?.[0] || null
+    return result.docs?.[0] || null
+  } catch (error) {
+    console.error('[Post Query] Database error:', error)
+    // Return null on error - the page will handle it gracefully
+    return null
+  }
 })

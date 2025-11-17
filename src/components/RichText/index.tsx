@@ -35,9 +35,57 @@ const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
   return relationTo === 'posts' ? `/posts/${slug}` : `/${slug}`
 }
 
+// Custom table renderer component
+const TableRenderer = ({ node }: { node: any }) => {
+  if (!node.children || node.children.length === 0) {
+    return null
+  }
+
+  return (
+    <div className="my-8 overflow-x-auto">
+      <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600">
+        <tbody>
+          {node.children.map((row: any, rowIndex: number) => {
+            if (row.type !== 'tablerow' || !row.children) return null
+            
+            const isHeader = rowIndex === 0 // First row as header
+            
+            return (
+              <tr
+                key={rowIndex}
+                className={isHeader ? 'bg-gray-100 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'}
+              >
+                {row.children.map((cell: any, cellIndex: number) => {
+                  if (cell.type !== 'tablecell') return null
+                  
+                  const CellTag = isHeader ? 'th' : 'td'
+                  const cellText = cell.children
+                    ?.map((child: any) => child.text || '')
+                    .join('') || ''
+                  
+                  return (
+                    <CellTag
+                      key={cellIndex}
+                      className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left"
+                    >
+                      {cellText}
+                    </CellTag>
+                  )
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...LinkJSXConverter({ internalDocToHref }),
+  // Add table converter
+  table: ({ node }) => <TableRenderer node={node} />,
   blocks: {
     banner: ({ node }) => <BannerBlock className="col-start-2 mb-4" {...node.fields} />,
     mediaBlock: ({ node }) => (

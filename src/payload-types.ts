@@ -814,6 +814,10 @@ export interface GoogleDocImport {
    * Number of images imported
    */
   imagesCount?: number | null;
+  /**
+   * Use AI formatting when syncing this document
+   */
+  useAI?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1409,6 +1413,7 @@ export interface GoogleDocImportsSelect<T extends boolean = true> {
   status?: T;
   errorMessage?: T;
   imagesCount?: T;
+  useAI?: T;
   updatedAt?: T;
   createdAt?: T;
 }

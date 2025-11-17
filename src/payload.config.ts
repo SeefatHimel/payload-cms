@@ -60,21 +60,39 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
-  db: postgresAdapter({
-    pool: {
-      connectionString: process.env.DATABASE_URI || '',
-      // Automatically configure SSL based on database provider
-      // Supabase and Render both require SSL for external connections
-      ssl: (() => {
-        const dbUri = process.env.DATABASE_URI || ''
-        // Enable SSL for Supabase (pooler or direct) and Render databases
-        if (dbUri.includes('supabase.com') || dbUri.includes('render.com')) {
-          return { rejectUnauthorized: false }
-        }
-        return undefined
-      })(),
-    },
-  }),
+  db: (() => {
+    const dbUri = process.env.DATABASE_URI || ''
+    console.log('[DB Config] Initializing database connection...')
+    console.log('[DB Config] Connection string:', dbUri ? `${dbUri.substring(0, 30)}...` : 'NOT SET')
+    console.log('[DB Config] Is Supabase:', dbUri.includes('supabase.com'))
+    console.log('[DB Config] Is Render:', dbUri.includes('render.com'))
+    
+    return postgresAdapter({
+      pool: {
+        connectionString: dbUri,
+        // Automatically configure SSL based on database provider
+        // Supabase and Render both require SSL for external connections
+        ssl: (() => {
+          // Enable SSL for Supabase (pooler or direct) and Render databases
+          if (dbUri.includes('supabase.com') || dbUri.includes('render.com')) {
+            console.log('[DB Config] Using SSL with rejectUnauthorized: false')
+            return { rejectUnauthorized: false }
+          }
+          console.log('[DB Config] No SSL configured')
+          return undefined
+        })(),
+        // Connection pool settings for better resilience
+        max: 10, // Maximum number of clients in the pool
+        idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+        connectionTimeoutMillis: 20000, // Wait 20 seconds for connection (increased for slow connections)
+        // Retry connection on failure
+        allowExitOnIdle: false, // Keep pool alive
+      },
+      // Disable automatic schema changes to prevent migration conflicts
+      // Use migrations instead: pnpm payload migrate:create and pnpm payload migrate
+      push: false,
+    })
+  })(),
   collections: [Pages, Posts, Media, Categories, Users, GoogleDocImports],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],

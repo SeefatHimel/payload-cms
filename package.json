@@ -23,6 +23,7 @@
     "import:doc": "node scripts/fetchDoc.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@payloadcms/admin-bar": "3.64.0",
     "@payloadcms/db-postgres": "3.64.0",
     "@payloadcms/live-preview-react": "3.64.0",

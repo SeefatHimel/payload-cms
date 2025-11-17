@@ -21,6 +21,7 @@ interface ImportResult {
 export const GoogleDocsImporter: React.FC<{ onImportSuccess?: () => void }> = ({ onImportSuccess }) => {
   const [docId, setDocId] = useState('')
   const [loading, setLoading] = useState(false)
+  const [useAI, setUseAI] = useState(true) // Default to enabled
   const [result, setResult] = useState<ImportResult | null>(null)
 
   const handleImport = async () => {
@@ -63,7 +64,7 @@ export const GoogleDocsImporter: React.FC<{ onImportSuccess?: () => void }> = ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ docId: extractedId }),
+        body: JSON.stringify({ docId: extractedId, useAI }),
         signal: controller.signal,
       })
 
@@ -184,6 +185,25 @@ export const GoogleDocsImporter: React.FC<{ onImportSuccess?: () => void }> = ({
         </p>
       </div>
 
+      <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <input
+          type="checkbox"
+          id="useAI"
+          checked={useAI}
+          onChange={(e) => setUseAI(e.target.checked)}
+          style={{ cursor: 'pointer' }}
+        />
+        <label htmlFor="useAI" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span>🤖</span>
+          <span>Use AI formatting (Google Gemini)</span>
+        </label>
+      </div>
+      {useAI && (
+        <p style={{ fontSize: '12px', color: '#666', marginTop: '-12px', marginBottom: '12px', marginLeft: '24px' }}>
+          Content will be enhanced with AI for better structure and readability
+        </p>
+      )}
+
       <button
         onClick={handleImport}
         disabled={loading || !docId.trim()}
@@ -198,7 +218,7 @@ export const GoogleDocsImporter: React.FC<{ onImportSuccess?: () => void }> = ({
           cursor: loading || !docId.trim() ? 'not-allowed' : 'pointer',
         }}
       >
-        {loading ? 'Importing...' : 'Import Document'}
+        {loading ? (useAI ? 'Importing with AI...' : 'Importing...') : 'Import Document'}
       </button>
 
       {result && (
