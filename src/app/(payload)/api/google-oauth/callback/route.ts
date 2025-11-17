@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getOAuth2Client, storeRefreshToken } from '@/utilities/googleOAuth'
+import { getServerSideURL } from '@/utilities/getURL'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
@@ -39,12 +40,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Store refresh token
     storeRefreshToken(tokens.refresh_token)
 
-    // Redirect to admin or show success message
-    const adminUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL 
-      ? `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/admin`
-      : 'http://localhost:3000/admin'
+    // Redirect to admin - use getServerSideURL() to get the correct URL (Render, Vercel, or localhost)
+    const baseUrl = getServerSideURL()
+    const adminUrl = `${baseUrl}/admin?google-oauth=success`
 
-    return NextResponse.redirect(`${adminUrl}?google-oauth=success`)
+    return NextResponse.redirect(adminUrl)
   } catch (error) {
     console.error('OAuth callback error:', error)
     return NextResponse.json(
