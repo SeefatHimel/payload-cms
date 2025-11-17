@@ -49,8 +49,11 @@ export function getOAuth2Client() {
   const baseUrl = getServerSideURL()
   const REDIRECT_URL = process.env.GOOGLE_REDIRECT_URL || `${baseUrl}/api/google-oauth/callback`
   
-  // Log for debugging (remove in production)
+  // Log for debugging - shows what URL is being used
+  console.log('[OAuth Debug] Base URL:', baseUrl)
   console.log('[OAuth Debug] Redirect URI being used:', REDIRECT_URL)
+  console.log('[OAuth Debug] NEXT_PUBLIC_SERVER_URL:', process.env.NEXT_PUBLIC_SERVER_URL || 'not set')
+  console.log('[OAuth Debug] RENDER_EXTERNAL_URL:', process.env.RENDER_EXTERNAL_URL || 'not set')
   
   return new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL)
 }
