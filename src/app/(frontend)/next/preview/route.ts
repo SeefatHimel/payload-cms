@@ -16,8 +16,15 @@ export async function GET(req: NextRequest): Promise<Response> {
   const collection = searchParams.get('collection') as CollectionSlug
   const slug = searchParams.get('slug')
   const previewSecret = searchParams.get('previewSecret')
+  const expectedSecret = process.env.PREVIEW_SECRET
 
-  if (previewSecret !== process.env.PREVIEW_SECRET) {
+  // Require PREVIEW_SECRET to be set in production
+  if (!expectedSecret) {
+    payload.logger.error('PREVIEW_SECRET environment variable is not set')
+    return new Response('Preview is not configured. Please set PREVIEW_SECRET environment variable.', { status: 500 })
+  }
+
+  if (previewSecret !== expectedSecret) {
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 
