@@ -7,8 +7,9 @@ import { getAccessToken } from '@/utilities/googleOAuth'
 import { parseGoogleDocToLexical } from '@/utilities/googleDocsParser'
 import { extractImagesFromExportedDoc } from '@/utilities/googleDocsImageHandler'
 import { extractGoogleDocId, isValidGoogleDocId } from '@/utilities/extractGoogleDocId'
-import { enhanceContentQuality } from '@/utilities/aiFormatter'
+import { enhanceContentQuality, batchFormatFAQs, type FAQBlockForFormatting } from '@/utilities/aiFormatter'
 import { parseMarkdownToLexical } from '@/utilities/markdownToLexical'
+import { parseFAQsFromLexical } from '@/utilities/faqParser'
 import { google } from 'googleapis'
 import type { Post } from '@/payload-types'
 
@@ -143,12 +144,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { docId: inputDocId, useAI = false } = body
     
     // Log AI configuration status
-    const hasApiKey = !!process.env.GOOGLE_AI_API_KEY
+    const { getAIProvider } = await import('@/utilities/aiProvider')
+    const aiConfig = getAIProvider()
+    const hasApiKey = !!aiConfig.apiKey
+    
     console.log(`[Import] 🔧 AI Configuration:`)
     console.log(`[Import]    - useAI requested: ${useAI}`)
-    console.log(`[Import]    - GOOGLE_AI_API_KEY set: ${hasApiKey}`)
+    console.log(`[Import]    - Provider: ${aiConfig.provider === 'openai' ? 'OpenAI' : aiConfig.provider === 'google' ? 'Google Gemini' : 'None'}`)
     if (hasApiKey) {
-      console.log(`[Import]    - Model: ${process.env.GOOGLE_AI_MODEL || 'gemini-2.0-flash-exp'}`)
+      console.log(`[Import]    - Model: ${aiConfig.model || 'default'}`)
+    }
+    
+    if (useAI && !hasApiKey) {
+      console.warn(`[Import] ⚠️  AI formatting requested but no API key configured`)
+    } else if (useAI && hasApiKey) {
+      console.log(`[Import] ℹ️  AI formatting enabled. If quota is exhausted, import will continue without AI.`)
     }
 
     if (!inputDocId || typeof inputDocId !== 'string') {
@@ -221,12 +231,107 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.log(`[Import] Parsing document to Lexical format`)
     let lexicalContent = parseGoogleDocToLexical(doc)
     console.log(`[Import] Parsed ${lexicalContent.root.children.length} content blocks`)
+    
+    // Detect and extract FAQ sections BEFORE AI enhancement
+    console.log(`[Import] 🔍 Detecting FAQ sections...`)
+    const { faqBlocks, remainingNodes } = parseFAQsFromLexical(lexicalContent.root.children)
+    
+    if (faqBlocks.length > 0) {
+      const totalQuestions = faqBlocks.reduce((sum, faq) => sum + faq.items.length, 0)
+      console.log(`[Import] ✅ Found ${faqBlocks.length} FAQ section(s) with ${totalQuestions} total questions`)
+      
+      // Use AI to format FAQ questions and answers if enabled (BATCH FORMATTING - 1 API call instead of 12+)
+      if (useAI && process.env.GOOGLE_AI_API_KEY) {
+        console.log(`[Import] 🤖 Batch formatting FAQ content with AI (1 API call for all FAQs)...`)
+        try {
+          // Prepare FAQ blocks for batch formatting
+          const faqBlocksForFormatting: FAQBlockForFormatting[] = faqBlocks.map(block => ({
+            title: block.title,
+            items: block.items.map(item => ({
+              question: item.question,
+              answer: extractTextFromLexical(item.answer), // Convert Lexical to plain text
+            })),
+          }))
+
+          // Batch format all FAQs in a single API call
+          const formattedFAQs = await batchFormatFAQs(faqBlocksForFormatting)
+
+          // Map formatted results back to original FAQ blocks
+          for (let blockIndex = 0; blockIndex < faqBlocks.length; blockIndex++) {
+            const originalBlock = faqBlocks[blockIndex]
+            const formattedBlock = formattedFAQs[blockIndex]
+
+            if (formattedBlock) {
+              // Update title if formatted
+              if (formattedBlock.title && formattedBlock.title !== originalBlock.title) {
+                originalBlock.title = formattedBlock.title
+              }
+
+              // Update questions and answers
+              for (let itemIndex = 0; itemIndex < originalBlock.items.length; itemIndex++) {
+                const originalItem = originalBlock.items[itemIndex]
+                const formattedItem = formattedBlock.items[itemIndex]
+
+                if (formattedItem) {
+                  // Update question
+                  if (formattedItem.question && formattedItem.question !== originalItem.question) {
+                    originalBlock.items[itemIndex].question = formattedItem.question.trim()
+                  }
+
+                  // Update answer (convert formatted text back to Lexical)
+                  if (formattedItem.answer && formattedItem.answer !== extractTextFromLexical(originalItem.answer)) {
+                    const { parseMarkdownToLexical } = await import('@/utilities/markdownToLexical')
+                    const formattedLexical = parseMarkdownToLexical(formattedItem.answer)
+                    // Use the formatted Lexical if it has content, otherwise keep original
+                    if (formattedLexical.root.children.length > 0) {
+                      originalBlock.items[itemIndex].answer = formattedLexical
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          console.log(`[Import] ✅ Batch FAQ formatting completed (reduced from ${totalQuestions * 2 + faqBlocks.length} calls to 1 call)`)
+        } catch (aiError) {
+          console.error(`[Import] ⚠️ Error batch formatting FAQ with AI:`, aiError)
+          console.warn(`[Import] Continuing with unformatted FAQ content`)
+          // FAQ blocks remain unchanged, will use original content
+        }
+      }
+      
+      // Convert FAQ blocks to Lexical block nodes (Payload CMS format)
+      const faqBlockNodes = faqBlocks.map((faqBlock) => ({
+        type: 'block',
+        fields: {
+          blockType: 'faq',
+          title: faqBlock.title || null,
+          items: faqBlock.items.map((item, index) => ({
+            question: item.question,
+            answer: item.answer,
+            id: `faq-item-${Date.now()}-${index}`, // Generate unique ID for each item
+          })),
+        },
+        format: '',
+        version: 2,
+      }))
+      
+      // Reconstruct content: remaining nodes + FAQ blocks
+      // Insert FAQ blocks where they appeared (at the end of remaining content for now)
+      lexicalContent.root.children = [...remainingNodes, ...faqBlockNodes]
+      console.log(`[Import] ✅ Inserted ${faqBlockNodes.length} FAQ block(s) into content`)
+    } else {
+      // No FAQ sections found, use original content
+      lexicalContent.root.children = remainingNodes.length > 0 ? remainingNodes : lexicalContent.root.children
+      console.log(`[Import] ℹ️  No FAQ sections detected`)
+    }
 
     // Optional AI enhancement
-    if (useAI && process.env.GOOGLE_AI_API_KEY) {
+    if (useAI && aiConfig.apiKey) {
       try {
+        const providerName = aiConfig.provider === 'openai' ? 'OpenAI' : aiConfig.provider === 'google' ? 'Google Gemini' : 'AI'
         console.log(`[Import] 🤖 ========================================`)
-        console.log(`[Import] 🤖 AI FORMATTING ENABLED - Using Google Gemini`)
+        console.log(`[Import] 🤖 AI FORMATTING ENABLED - Using ${providerName}`)
         console.log(`[Import] 🤖 ========================================`)
         
         // Extract text from Lexical for AI processing

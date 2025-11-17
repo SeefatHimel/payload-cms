@@ -102,13 +102,15 @@ const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
 
   try {
+    // Increased timeout for database connection (20 seconds)
     const payload = await Promise.race([
       getPayload({ config: configPromise }),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+        setTimeout(() => reject(new Error('Database connection timeout')), 20000)
       ) as Promise<never>
     ])
 
+    // Increased timeout for query (30 seconds) - Render DB can be slow
     const result = await Promise.race([
       payload.find({
         collection: 'posts',
@@ -123,13 +125,24 @@ const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
         },
       }),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Query timeout')), 10000)
+        setTimeout(() => reject(new Error('Query timeout')), 30000)
       ) as Promise<never>
     ])
 
     return result.docs?.[0] || null
   } catch (error) {
     console.error('[Post Query] Database error:', error)
+    
+    // Log more details for debugging
+    if (error instanceof Error) {
+      if (error.message.includes('timeout')) {
+        console.warn('[Post Query] ⚠️ Query timed out - database may be slow or unreachable')
+        console.warn('[Post Query] Consider checking database connection and pool settings')
+      } else if (error.message.includes('connection')) {
+        console.warn('[Post Query] ⚠️ Database connection issue - check DATABASE_URI and network')
+      }
+    }
+    
     // Return null on error - the page will handle it gracefully
     return null
   }

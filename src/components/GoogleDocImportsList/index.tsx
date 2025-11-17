@@ -69,14 +69,18 @@ export const GoogleDocImportsList: React.FC = () => {
         body: JSON.stringify({ status: 'syncing' }),
       })
 
-      // Trigger sync
+      // Get the import record to check useAI preference
+      const importRecord = imports.find(imp => imp.id === importId)
+      const shouldUseAI = importRecord?.useAI ?? true
+      
+      // Trigger sync with AI preference
       const response = await fetch('/api/import/google-doc', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ docId }),
+        body: JSON.stringify({ docId, useAI: shouldUseAI }),
       })
 
       const result = await response.json()

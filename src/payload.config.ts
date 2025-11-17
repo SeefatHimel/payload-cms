@@ -84,7 +84,7 @@ export default buildConfig({
         // Connection pool settings for better resilience
         max: 10, // Maximum number of clients in the pool
         idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-        connectionTimeoutMillis: 20000, // Wait 20 seconds for connection (increased for slow connections)
+        connectionTimeoutMillis: 30000, // Wait 30 seconds for connection (increased for slow Render DB)
         // Retry connection on failure
         allowExitOnIdle: false, // Keep pool alive
       },
