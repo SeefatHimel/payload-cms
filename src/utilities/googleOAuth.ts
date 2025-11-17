@@ -7,6 +7,7 @@
  */
 
 import { google } from 'googleapis'
+import { getServerSideURL } from './getURL'
 
 export interface GoogleTokens {
   refreshToken: string
@@ -44,7 +45,8 @@ export function getOAuth2Client() {
   }
   
   // Determine redirect URL - use GOOGLE_REDIRECT_URL if set, otherwise construct from server URL
-  const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL || process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+  // This will use NEXT_PUBLIC_SERVER_URL in production (e.g., Render) or localhost in development
+  const baseUrl = getServerSideURL()
   const REDIRECT_URL = process.env.GOOGLE_REDIRECT_URL || `${baseUrl}/api/google-oauth/callback`
   
   // Log for debugging (remove in production)
