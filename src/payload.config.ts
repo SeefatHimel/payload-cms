@@ -63,6 +63,16 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
+      // Automatically configure SSL based on database provider
+      // Supabase and Render both require SSL for external connections
+      ssl: (() => {
+        const dbUri = process.env.DATABASE_URI || ''
+        // Enable SSL for Supabase (pooler or direct) and Render databases
+        if (dbUri.includes('supabase.com') || dbUri.includes('render.com')) {
+          return { rejectUnauthorized: false }
+        }
+        return undefined
+      })(),
     },
   }),
   collections: [Pages, Posts, Media, Categories, Users, GoogleDocImports],
