@@ -93,10 +93,8 @@ An intelligent content management system that automatically imports, formats, an
 
 ## 📚 Documentation
 
-- [Setup Guide](AI_PROVIDER_SETUP.md) - How to configure AI providers
+- **[Complete Setup Guide](COMPLETE_SETUP_GUIDE.md)** - Everything you need to set up and deploy the system
 - [FAQ Detection](FAQ_AUTO_DETECTION_GUIDE.md) - FAQ auto-detection guide
-- [Technical Details](CHANGELOG_AI_PROVIDER.md) - Implementation details
-- [Troubleshooting](QUOTA_EXHAUSTION_SOLUTIONS.md) - Common issues
 
 ---
 
