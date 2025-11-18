@@ -62,4 +62,3 @@ Error extracting images from exported doc
 3. **Verify OAuth scopes** include `drive.readonly`
 4. **Check project billing** (some APIs require billing to be enabled)
 
-

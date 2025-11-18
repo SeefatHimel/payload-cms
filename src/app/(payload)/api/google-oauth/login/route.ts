@@ -8,6 +8,7 @@ export async function GET(): Promise<NextResponse> {
     const SCOPES = [
       'https://www.googleapis.com/auth/documents.readonly',
       'https://www.googleapis.com/auth/drive.readonly',
+      'https://www.googleapis.com/auth/drive.file', // Needed to convert Word documents to Google Docs format
     ]
 
     const authUrl = oauth2Client.generateAuthUrl({

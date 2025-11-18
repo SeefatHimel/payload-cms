@@ -50,4 +50,3 @@ export function isValidGoogleDocId(docId: string): boolean {
   return /^[a-zA-Z0-9_-]{20,44}$/.test(docId)
 }
 
-

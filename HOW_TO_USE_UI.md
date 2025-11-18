@@ -184,4 +184,3 @@ If you haven't authenticated yet:
 
 You now have a complete UI for importing and managing Google Docs. No need for Postman or API calls - just use the web interface!
 
-

@@ -11,6 +11,7 @@ import { enhanceContentQuality, batchFormatFAQs, type FAQBlockForFormatting } fr
 import { parseMarkdownToLexical } from '@/utilities/markdownToLexical'
 import { parseFAQsFromLexical } from '@/utilities/faqParser'
 import { google } from 'googleapis'
+import type { docs_v1 } from 'googleapis'
 import type { Post } from '@/payload-types'
 
 export const maxDuration = 300 // 5 minutes for large documents
@@ -27,13 +28,13 @@ function enhanceTextInLexicalNodes(
   // Split both texts into lines/paragraphs for mapping
   const originalLines = originalText.split('\n').filter(line => line.trim())
   const enhancedLines = enhancedText.split('\n').filter(line => line.trim())
-  
+
   // If line counts don't match, return original (structure changed)
   if (originalLines.length !== enhancedLines.length) {
     console.warn(`[Import] ⚠️ Line count mismatch - preserving original structure`)
     return originalLexical
   }
-  
+
   // Create a mapping of original to enhanced text (by position)
   const textMap = new Map<string, string>()
   for (let i = 0; i < originalLines.length; i++) {
@@ -43,19 +44,19 @@ function enhanceTextInLexicalNodes(
       textMap.set(original, enhanced)
     }
   }
-  
+
   // If no changes detected, return original
   if (textMap.size === 0) {
     console.log(`[Import] ℹ️  No text changes detected - using original content`)
     return originalLexical
   }
-  
+
   // Recursively update text nodes in Lexical structure
   function updateTextNodes(node: any): any {
     if (node.type === 'text' && node.text) {
       const nodeText = node.text
       let updatedText = nodeText
-      
+
       // Try to find and replace matching text segments
       for (const [original, enhanced] of textMap.entries()) {
         // Only replace if the text segment appears in this node
@@ -64,7 +65,7 @@ function enhanceTextInLexicalNodes(
           break // Only replace first match to avoid over-replacement
         }
       }
-      
+
       // Only update if text actually changed
       if (updatedText !== nodeText) {
         return {
@@ -74,17 +75,17 @@ function enhanceTextInLexicalNodes(
       }
       return node
     }
-    
+
     if (node.children && Array.isArray(node.children)) {
       return {
         ...node,
         children: node.children.map(updateTextNodes)
       }
     }
-    
+
     return node
   }
-  
+
   return {
     root: {
       ...originalLexical.root,
@@ -114,7 +115,7 @@ function extractTextFromLexical(lexical: any): string {
   }
 
   const paragraphs: string[] = []
-  
+
   for (const child of lexical.root.children) {
     const text = extractText(child)
     if (text.trim()) {
@@ -142,19 +143,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { docId: inputDocId, useAI = false } = body
-    
+
     // Log AI configuration status
     const { getAIProvider } = await import('@/utilities/aiProvider')
     const aiConfig = getAIProvider()
     const hasApiKey = !!aiConfig.apiKey
-    
+
     console.log(`[Import] 🔧 AI Configuration:`)
     console.log(`[Import]    - useAI requested: ${useAI}`)
     console.log(`[Import]    - Provider: ${aiConfig.provider === 'openai' ? 'OpenAI' : aiConfig.provider === 'google' ? 'Google Gemini' : 'None'}`)
     if (hasApiKey) {
       console.log(`[Import]    - Model: ${aiConfig.model || 'default'}`)
     }
-    
+
     if (useAI && !hasApiKey) {
       console.warn(`[Import] ⚠️  AI formatting requested but no API key configured`)
     } else if (useAI && hasApiKey) {
@@ -169,8 +170,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Extract Doc ID from URL or use as-is
-    const docId = extractGoogleDocId(inputDocId.trim())
-    
+    let docId = extractGoogleDocId(inputDocId.trim())
+
     if (!docId) {
       return NextResponse.json(
         { error: 'Invalid Google Doc URL or ID format.' },
@@ -189,57 +190,251 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { getOAuth2Client } = await import('@/utilities/googleOAuth')
     const oauth2Client = getOAuth2Client()
     const accessToken = await getAccessToken()
-    
+
     // Set the access token on the OAuth client
     oauth2Client.setCredentials({
       access_token: accessToken,
     })
 
     // Initialize Google APIs with the OAuth client
-    const docs = google.docs({ 
-      version: 'v1', 
+    const docs = google.docs({
+      version: 'v1',
       auth: oauth2Client
     })
-    // Drive API not currently used, but kept for future image extraction from Drive
-    // const drive = google.drive({ 
-    //   version: 'v3', 
-    //   auth: oauth2Client
-    // })
-
-    // Fetch Google Doc with timeout handling
-    console.log(`[Import] Fetching Google Doc: ${docId}`)
-    const docResponse = await docs.documents.get({
-      documentId: docId,
-    }).catch((error) => {
-      console.error('[Import] Error fetching document:', error)
-      throw new Error(`Failed to fetch Google Doc: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    const drive = google.drive({
+      version: 'v3',
+      auth: oauth2Client
     })
 
-    const doc = docResponse.data
+    // Fetch Google Doc with timeout handling and fallback to Drive API export
+    console.log(`[Import] Fetching Google Doc: ${docId}`)
+    let doc: docs_v1.Schema$Document | null = null
+    let title = 'Untitled Document'
+    let lexicalContent: any
 
-    if (!doc) {
+    try {
+      const docResponse = await docs.documents.get({
+        documentId: docId,
+      })
+      doc = docResponse.data
+      title = doc?.title || 'Untitled Document'
+
+      // Parse document to Lexical format
+      console.log(`[Import] Parsing document to Lexical format`)
+      lexicalContent = parseGoogleDocToLexical(doc)
+      console.log(`[Import] Parsed ${lexicalContent.root.children.length} content blocks`)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      console.warn(`[Import] Documents API failed: ${errorMessage}`)
+
+      // Check if this is the "not supported" error
+      // This often happens with documents containing images or special formatting
+      // We'll use Drive API export as a fallback to get the content
+      if (errorMessage.includes('not supported') || errorMessage.includes('This operation is not supported')) {
+        console.log(`[Import] Document not supported by Documents API, checking file type...`)
+
+        try {
+          // Get document metadata to check file type
+          let fileMetadata
+          let mimeType: string | null = null
+
+          try {
+            fileMetadata = await drive.files.get({
+              fileId: docId,
+              fields: 'name, mimeType',
+            })
+            title = fileMetadata.data.name || 'Untitled Document'
+            mimeType = fileMetadata.data.mimeType || null
+            console.log(`[Import] File type: ${mimeType}, Title: ${title}`)
+          } catch (metadataError) {
+            console.warn(`[Import] Could not get document metadata: ${metadataError instanceof Error ? metadataError.message : 'Unknown error'}`)
+            // Continue without metadata - will try export as fallback
+          }
+
+          // Check if it's a Word document or other non-Google Docs file
+          if (mimeType && !mimeType.includes('google-apps.document')) {
+            // This is a Word document (.docx) or other file type, not a native Google Doc
+            // We need to convert it to Google Docs format first
+            console.log(`[Import] File is not a native Google Doc (${mimeType}), converting to Google Docs format...`)
+
+            try {
+              // Copy the file and convert it to Google Docs format
+              const convertedFile = await drive.files.copy({
+                fileId: docId,
+                requestBody: {
+                  name: `${title} (converted)`,
+                  mimeType: 'application/vnd.google-apps.document',
+                },
+              })
+
+              const convertedDocId = convertedFile.data.id
+              if (!convertedDocId) {
+                throw new Error('Failed to get converted document ID')
+              }
+
+              console.log(`[Import] Successfully converted to Google Doc: ${convertedDocId}`)
+
+              // Now try to fetch the converted document using Documents API
+              const convertedDocResponse = await docs.documents.get({
+                documentId: convertedDocId,
+              })
+              doc = convertedDocResponse.data
+              title = doc?.title || title
+
+              // Parse document to Lexical format
+              console.log(`[Import] Parsing converted document to Lexical format`)
+              lexicalContent = parseGoogleDocToLexical(doc)
+              console.log(`[Import] Parsed ${lexicalContent.root.children.length} content blocks`)
+
+              // Update docId to use the converted document for image extraction
+              docId = convertedDocId
+
+            } catch (convertError) {
+              console.error('[Import] Failed to convert document:', convertError)
+              const convertErrorMessage = convertError instanceof Error ? convertError.message : String(convertError)
+
+              // Check if it's an authentication scope issue
+              if (convertErrorMessage.includes('insufficient authentication scopes') || convertErrorMessage.includes('403')) {
+                return NextResponse.json(
+                  {
+                    error: 'Insufficient permissions to convert Word documents',
+                    details: 'Your current refresh token was issued with read-only permissions. Even though you\'ve updated the OAuth scopes in Google Cloud Console, you need to re-authenticate to get a new token with write permissions.',
+                    solution: [
+                      '1. Revoke existing access (optional but recommended):',
+                      '   Visit https://myaccount.google.com/permissions and remove access to your app',
+                      '2. Re-authenticate with new scopes:',
+                      '   Visit /api/google-oauth/login in your browser',
+                      '3. Grant the new permissions (including drive.file scope)',
+                      '4. Copy the new refresh token from your console/terminal',
+                      '5. Update GOOGLE_REFRESH_TOKEN in your .env file',
+                      '6. Restart your server and try importing again',
+                      '',
+                      'Alternatively, manually convert the Word document to Google Docs format in Google Drive first.'
+                    ].join('\n'),
+                    originalError: errorMessage,
+                  },
+                  { status: 403 }
+                )
+              }
+
+              return NextResponse.json(
+                {
+                  error: 'Failed to process document',
+                  details: 'The file appears to be a Word document (.docx) that could not be converted to Google Docs format. Please convert it to Google Docs format manually first.',
+                  originalError: errorMessage,
+                },
+                { status: 400 }
+              )
+            }
+          } else {
+            // It's a native Google Doc (or we couldn't determine type), try export
+            console.log(`[Import] Native Google Doc detected (or type unknown), trying Drive API export fallback...`)
+
+            // Export document as HTML to preserve structure
+            // Note: Images will be extracted separately later using extractImagesFromExportedDoc
+            // which also uses Drive API export, so this is a bit redundant but necessary
+            const exportResponse = await drive.files.export(
+              {
+                fileId: docId,
+                mimeType: 'text/html',
+              },
+              {
+                responseType: 'text',
+              }
+            )
+
+            const htmlContent = exportResponse.data as string
+
+            if (!htmlContent || htmlContent.trim().length === 0) {
+              return NextResponse.json(
+                { error: 'Document appears to be empty or could not be exported' },
+                { status: 400 }
+              )
+            }
+
+            // Convert HTML to plain text for Lexical parsing
+            // Remove HTML tags but preserve structure with newlines
+            const textContent = htmlContent
+              .replace(/<h[1-6][^>]*>/gi, '\n\n# ') // Headings
+              .replace(/<\/h[1-6]>/gi, '\n')
+              .replace(/<p[^>]*>/gi, '\n\n') // Paragraphs
+              .replace(/<\/p>/gi, '')
+              .replace(/<br\s*\/?>/gi, '\n') // Line breaks
+              .replace(/<li[^>]*>/gi, '\n- ') // List items
+              .replace(/<\/li>/gi, '')
+              .replace(/<[^>]+>/g, '') // Remove all other HTML tags
+              .replace(/&nbsp;/g, ' ')
+              .replace(/&amp;/g, '&')
+              .replace(/&lt;/g, '<')
+              .replace(/&gt;/g, '>')
+              .replace(/&quot;/g, '"')
+              .replace(/&#39;/g, "'")
+              .split('\n')
+              .map(line => line.trim())
+              .filter(line => line.length > 0)
+              .join('\n')
+
+            if (!textContent || textContent.trim().length === 0) {
+              return NextResponse.json(
+                { error: 'Document appears to be empty after HTML parsing' },
+                { status: 400 }
+              )
+            }
+
+            // Convert text to Lexical format using markdown parser
+            console.log(`[Import] Converting exported HTML to Lexical format`)
+            const { parseMarkdownToLexical } = await import('@/utilities/markdownToLexical')
+            lexicalContent = parseMarkdownToLexical(textContent)
+            console.log(`[Import] Parsed ${lexicalContent.root.children.length} content blocks from exported HTML`)
+          }
+
+        } catch (exportError) {
+          console.error('[Import] Drive API export/convert also failed:', exportError)
+          const exportErrorMessage = exportError instanceof Error ? exportError.message : String(exportError)
+
+          // Check if it's the "Export only supports Docs Editors files" error
+          if (exportErrorMessage.includes('Export only supports Docs Editors files') || exportErrorMessage.includes('fileNotExportable')) {
+            return NextResponse.json(
+              {
+                error: 'Unsupported file type',
+                details: 'The file is a Word document (.docx) or other format that cannot be directly exported. Please convert it to Google Docs format first, or use a native Google Doc.',
+                originalError: errorMessage,
+              },
+              { status: 400 }
+            )
+          }
+
+          return NextResponse.json(
+            {
+              error: 'Failed to fetch Google Doc',
+              details: 'Both Documents API and Drive API export failed. The document may be restricted or in an unsupported format.',
+              originalError: errorMessage,
+            },
+            { status: 500 }
+          )
+        }
+      } else {
+        // For other errors, throw as before
+        console.error('[Import] Error fetching document:', error)
+        throw new Error(`Failed to fetch Google Doc: ${errorMessage}`)
+      }
+    }
+
+    if (!lexicalContent) {
       return NextResponse.json(
         { error: 'Document not found or inaccessible' },
         { status: 404 }
       )
     }
 
-    // Get document title
-    const title = doc.title || 'Untitled Document'
-
-    // Parse document to Lexical format
-    console.log(`[Import] Parsing document to Lexical format`)
-    let lexicalContent = parseGoogleDocToLexical(doc)
-    console.log(`[Import] Parsed ${lexicalContent.root.children.length} content blocks`)
-    
     // Detect and extract FAQ sections BEFORE AI enhancement
     console.log(`[Import] 🔍 Detecting FAQ sections...`)
     const { faqBlocks, remainingNodes } = parseFAQsFromLexical(lexicalContent.root.children)
-    
+
     if (faqBlocks.length > 0) {
       const totalQuestions = faqBlocks.reduce((sum, faq) => sum + faq.items.length, 0)
       console.log(`[Import] ✅ Found ${faqBlocks.length} FAQ section(s) with ${totalQuestions} total questions`)
-      
+
       // Use AI to format FAQ questions and answers if enabled (BATCH FORMATTING - 1 API call instead of 12+)
       if (useAI && process.env.GOOGLE_AI_API_KEY) {
         console.log(`[Import] 🤖 Batch formatting FAQ content with AI (1 API call for all FAQs)...`)
@@ -299,7 +494,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           // FAQ blocks remain unchanged, will use original content
         }
       }
-      
+
       // Convert FAQ blocks to Lexical block nodes (Payload CMS format)
       const faqBlockNodes = faqBlocks.map((faqBlock) => ({
         type: 'block',
@@ -315,7 +510,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         format: '',
         version: 2,
       }))
-      
+
       // Reconstruct content: remaining nodes + FAQ blocks
       // Insert FAQ blocks where they appeared (at the end of remaining content for now)
       lexicalContent.root.children = [...remainingNodes, ...faqBlockNodes]
@@ -333,22 +528,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         console.log(`[Import] 🤖 ========================================`)
         console.log(`[Import] 🤖 AI FORMATTING ENABLED - Using ${providerName}`)
         console.log(`[Import] 🤖 ========================================`)
-        
+
         // Extract text from Lexical for AI processing
         const textContent = extractTextFromLexical(lexicalContent)
         console.log(`[Import] 📝 Extracted ${textContent.length} characters from Lexical content`)
-        
+
         if (textContent.trim().length === 0) {
           console.warn(`[Import] ⚠️ No text content to enhance, skipping AI formatting`)
         } else {
           // Enhance text content with AI (preserves structure, improves text quality)
           const enhancedText = await enhanceContentQuality(textContent, 'blog post')
-          
+
           // Instead of replacing the entire structure, enhance text within existing nodes
           // This preserves original formatting, spacing, and design
           console.log(`[Import] 🔄 Enhancing text content while preserving original structure...`)
           lexicalContent = enhanceTextInLexicalNodes(lexicalContent, textContent, enhancedText)
-          
+
           // Log AI usage results
           console.log(`[Import] ✅ ========================================`)
           console.log(`[Import] ✅ AI TEXT ENHANCEMENT COMPLETED`)
@@ -392,7 +587,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         console.warn(`[Import] Note: Google Drive API may not be enabled. Images will be skipped.`)
       }
     }
-    
+
     // Download and upload images to Payload
     const imageMap = new Map<string, number>()
     const payloadReq = await createLocalReq({ user }, payload)
@@ -402,17 +597,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // Download image using improved handler
         const { downloadImageFromUrl } = await import('@/utilities/googleDocsImageHandler')
         const imageBuffer = await downloadImageFromUrl(imageInfo.url, oauth2Client)
-        
+
         if (!imageBuffer) {
           console.warn(`Failed to download image: ${imageInfo.url}`)
           continue
         }
-        
+
         // Determine file extension from URL or default to png
         const urlLower = imageInfo.url.toLowerCase()
         let contentType = 'image/png'
         let extension = 'png'
-        
+
         if (urlLower.includes('.jpg') || urlLower.includes('.jpeg')) {
           contentType = 'image/jpeg'
           extension = 'jpg'
@@ -423,7 +618,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           contentType = 'image/webp'
           extension = 'webp'
         }
-        
+
         const filename = `google-doc-image-${Date.now()}.${extension}`
 
         // Upload to Payload - create Payload-compatible file object
@@ -456,7 +651,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // For now, we'll add images as MediaBlock nodes after paragraphs
     // This is a simplified approach - in production you might want more sophisticated placement
     const contentWithImages = { ...lexicalContent }
-    
+
     // Add image blocks after content (simplified - you might want to place them inline)
     if (imageMap.size > 0) {
       const imageBlocks = Array.from(imageMap.values()).map((mediaId) => ({
@@ -492,8 +687,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (existingImports.docs.length > 0) {
       // Update existing post
       const existingImport = existingImports.docs[0]
-      const existingPostId = typeof existingImport.post === 'object' 
-        ? existingImport.post.id 
+      const existingPostId = typeof existingImport.post === 'object'
+        ? existingImport.post.id
         : existingImport.post
 
       post = await payload.update({
@@ -563,12 +758,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     })
   } catch (error) {
     console.error('Import error:', error)
-    
+
     // Handle specific error types
     if (error instanceof Error) {
       if (error.message.includes('refresh token')) {
         return NextResponse.json(
-          { 
+          {
             error: 'Authentication failed',
             message: 'Please complete OAuth flow again by visiting /api/google-oauth/login',
             details: error.message,
@@ -576,7 +771,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           { status: 401 }
         )
       }
-      
+
       if (error.message.includes('not found') || error.message.includes('404')) {
         return NextResponse.json(
           { error: 'Document not found or you do not have access to it' },
@@ -586,7 +781,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to import document',
         details: error instanceof Error ? error.message : 'Unknown error',
       },

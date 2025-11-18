@@ -78,6 +78,23 @@ export async function getAccessToken(): Promise<string> {
     if (!credentials.access_token) {
       throw new Error('No access token received from refresh')
     }
+
+    // Log token info for debugging (only in development)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[OAuth] Access token refreshed successfully')
+      if (credentials.scope) {
+        console.log('[OAuth] Token scopes:', credentials.scope)
+        const hasDriveFile = credentials.scope.includes('drive.file')
+        const hasDriveReadonly = credentials.scope.includes('drive.readonly')
+        console.log('[OAuth] Has drive.file scope:', hasDriveFile ? '✅' : '❌')
+        console.log('[OAuth] Has drive.readonly scope:', hasDriveReadonly ? '✅' : '❌')
+        if (!hasDriveFile) {
+          console.warn('[OAuth] ⚠️  Missing drive.file scope - Word document conversion will fail!')
+          console.warn('[OAuth] ⚠️  Please re-authenticate at /api/google-oauth/login')
+        }
+      }
+    }
+
     return credentials.access_token
   } catch (error) {
     throw new Error(`Failed to refresh access token: ${error instanceof Error ? error.message : 'Unknown error'}`)
