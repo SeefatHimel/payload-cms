@@ -1,0 +1,11 @@
+{
+  "commands": [
+    {
+      "name": "generate-ai-prompt",
+      "description": "Generate the AI prompt file with all block schemas and examples",
+      "command": "npm run generate:ai-prompt",
+      "output": "Creates AI_PROMPT_FILE.md in project root"
+    }
+  ]
+}
+

@@ -1,0 +1,736 @@
+{
+  "blocks": [
+    {
+      "slug": "faq",
+      "interfaceName": "FAQBlock",
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "FAQ Section Title",
+          "admin": {
+            "description": "Optional title for the FAQ section (e.g., \"Frequently Asked Questions\")"
+          }
+        },
+        {
+          "name": "items",
+          "type": "array",
+          "label": "FAQ Items",
+          "minRows": 1,
+          "required": true,
+          "fields": [
+            {
+              "name": "question",
+              "type": "text",
+              "label": "Question",
+              "required": true
+            },
+            {
+              "name": "answer",
+              "type": "richText",
+              "label": "Answer",
+              "required": true,
+              "editor": {
+                "type": "lexical",
+                "features": [
+                  "rootFeatures",
+                  "FixedToolbarFeature",
+                  "InlineToolbarFeature"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "labels": {
+        "plural": "FAQs",
+        "singular": "FAQ"
+      }
+    },
+    {
+      "slug": "banner",
+      "interfaceName": "BannerBlock",
+      "fields": [
+        {
+          "name": "style",
+          "type": "select",
+          "defaultValue": "info",
+          "options": [
+            {
+              "label": "Info",
+              "value": "info"
+            },
+            {
+              "label": "Warning",
+              "value": "warning"
+            },
+            {
+              "label": "Error",
+              "value": "error"
+            },
+            {
+              "label": "Success",
+              "value": "success"
+            }
+          ],
+          "required": true
+        },
+        {
+          "name": "content",
+          "type": "richText",
+          "label": false,
+          "required": true,
+          "editor": {
+            "type": "lexical",
+            "features": [
+              "rootFeatures",
+              "FixedToolbarFeature",
+              "InlineToolbarFeature"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "slug": "code",
+      "interfaceName": "CodeBlock",
+      "fields": [
+        {
+          "name": "language",
+          "type": "select",
+          "defaultValue": "typescript",
+          "options": [
+            {
+              "label": "Typescript",
+              "value": "typescript"
+            },
+            {
+              "label": "Javascript",
+              "value": "javascript"
+            },
+            {
+              "label": "CSS",
+              "value": "css"
+            }
+          ]
+        },
+        {
+          "name": "code",
+          "type": "code",
+          "label": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "slug": "mediaBlock",
+      "interfaceName": "MediaBlock",
+      "fields": [
+        {
+          "name": "media",
+          "type": "upload",
+          "relationTo": "media",
+          "required": true
+        }
+      ]
+    },
+    {
+      "slug": "cta",
+      "interfaceName": "CallToActionBlock",
+      "fields": [
+        {
+          "name": "richText",
+          "type": "richText",
+          "label": false,
+          "editor": {
+            "type": "lexical",
+            "features": [
+              "rootFeatures",
+              "HeadingFeature",
+              "FixedToolbarFeature",
+              "InlineToolbarFeature"
+            ],
+            "headingSizes": ["h1", "h2", "h3", "h4"]
+          }
+        },
+        {
+          "name": "links",
+          "type": "array",
+          "admin": {
+            "initCollapsed": true
+          },
+          "maxRows": 2,
+          "fields": [
+            {
+              "name": "link",
+              "type": "group",
+              "admin": {
+                "hideGutter": true
+              },
+              "fields": [
+                {
+                  "type": "row",
+                  "fields": [
+                    {
+                      "name": "type",
+                      "type": "radio",
+                      "admin": {
+                        "layout": "horizontal",
+                        "width": "50%"
+                      },
+                      "defaultValue": "reference",
+                      "options": [
+                        {
+                          "label": "Internal link",
+                          "value": "reference"
+                        },
+                        {
+                          "label": "Custom URL",
+                          "value": "custom"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "newTab",
+                      "type": "checkbox",
+                      "admin": {
+                        "style": {
+                          "alignSelf": "flex-end"
+                        },
+                        "width": "50%"
+                      },
+                      "label": "Open in new tab"
+                    }
+                  ]
+                },
+                {
+                  "type": "row",
+                  "fields": [
+                    {
+                      "name": "reference",
+                      "type": "relationship",
+                      "admin": {
+                        "condition": "siblingData?.type === 'reference'",
+                        "width": "50%"
+                      },
+                      "label": "Document to link to",
+                      "relationTo": ["pages", "posts"],
+                      "required": true
+                    },
+                    {
+                      "name": "url",
+                      "type": "text",
+                      "admin": {
+                        "condition": "siblingData?.type === 'custom'",
+                        "width": "50%"
+                      },
+                      "label": "Custom URL",
+                      "required": true
+                    },
+                    {
+                      "name": "label",
+                      "type": "text",
+                      "admin": {
+                        "width": "50%"
+                      },
+                      "label": "Label",
+                      "required": true
+                    }
+                  ]
+                },
+                {
+                  "name": "appearance",
+                  "type": "select",
+                  "admin": {
+                    "description": "Choose how the link should be rendered."
+                  },
+                  "defaultValue": "default",
+                  "options": [
+                    {
+                      "label": "Default",
+                      "value": "default"
+                    },
+                    {
+                      "label": "Outline",
+                      "value": "outline"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "labels": {
+        "plural": "Calls to Action",
+        "singular": "Call to Action"
+      }
+    },
+    {
+      "slug": "content",
+      "interfaceName": "ContentBlock",
+      "fields": [
+        {
+          "name": "columns",
+          "type": "array",
+          "admin": {
+            "initCollapsed": true
+          },
+          "fields": [
+            {
+              "name": "size",
+              "type": "select",
+              "defaultValue": "oneThird",
+              "options": [
+                {
+                  "label": "One Third",
+                  "value": "oneThird"
+                },
+                {
+                  "label": "Half",
+                  "value": "half"
+                },
+                {
+                  "label": "Two Thirds",
+                  "value": "twoThirds"
+                },
+                {
+                  "label": "Full",
+                  "value": "full"
+                }
+              ]
+            },
+            {
+              "name": "richText",
+              "type": "richText",
+              "label": false,
+              "editor": {
+                "type": "lexical",
+                "features": [
+                  "rootFeatures",
+                  "HeadingFeature",
+                  "FixedToolbarFeature",
+                  "InlineToolbarFeature"
+                ],
+                "headingSizes": ["h2", "h3", "h4"]
+              }
+            },
+            {
+              "name": "enableLink",
+              "type": "checkbox"
+            },
+            {
+              "name": "link",
+              "type": "group",
+              "admin": {
+                "hideGutter": true,
+                "condition": "siblingData?.enableLink"
+              },
+              "fields": [
+                {
+                  "type": "row",
+                  "fields": [
+                    {
+                      "name": "type",
+                      "type": "radio",
+                      "admin": {
+                        "layout": "horizontal",
+                        "width": "50%"
+                      },
+                      "defaultValue": "reference",
+                      "options": [
+                        {
+                          "label": "Internal link",
+                          "value": "reference"
+                        },
+                        {
+                          "label": "Custom URL",
+                          "value": "custom"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "newTab",
+                      "type": "checkbox",
+                      "admin": {
+                        "style": {
+                          "alignSelf": "flex-end"
+                        },
+                        "width": "50%"
+                      },
+                      "label": "Open in new tab"
+                    }
+                  ]
+                },
+                {
+                  "type": "row",
+                  "fields": [
+                    {
+                      "name": "reference",
+                      "type": "relationship",
+                      "admin": {
+                        "condition": "siblingData?.type === 'reference'",
+                        "width": "50%"
+                      },
+                      "label": "Document to link to",
+                      "relationTo": ["pages", "posts"],
+                      "required": true
+                    },
+                    {
+                      "name": "url",
+                      "type": "text",
+                      "admin": {
+                        "condition": "siblingData?.type === 'custom'",
+                        "width": "50%"
+                      },
+                      "label": "Custom URL",
+                      "required": true
+                    },
+                    {
+                      "name": "label",
+                      "type": "text",
+                      "admin": {
+                        "width": "50%"
+                      },
+                      "label": "Label",
+                      "required": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "archive",
+      "interfaceName": "ArchiveBlock",
+      "fields": [
+        {
+          "name": "introContent",
+          "type": "richText",
+          "label": "Intro Content",
+          "editor": {
+            "type": "lexical",
+            "features": [
+              "rootFeatures",
+              "HeadingFeature",
+              "FixedToolbarFeature",
+              "InlineToolbarFeature"
+            ],
+            "headingSizes": ["h1", "h2", "h3", "h4"]
+          }
+        },
+        {
+          "name": "populateBy",
+          "type": "select",
+          "defaultValue": "collection",
+          "options": [
+            {
+              "label": "Collection",
+              "value": "collection"
+            },
+            {
+              "label": "Individual Selection",
+              "value": "selection"
+            }
+          ]
+        },
+        {
+          "name": "relationTo",
+          "type": "select",
+          "admin": {
+            "condition": "siblingData.populateBy === 'collection'"
+          },
+          "defaultValue": "posts",
+          "label": "Collections To Show",
+          "options": [
+            {
+              "label": "Posts",
+              "value": "posts"
+            }
+          ]
+        },
+        {
+          "name": "categories",
+          "type": "relationship",
+          "admin": {
+            "condition": "siblingData.populateBy === 'collection'"
+          },
+          "hasMany": true,
+          "label": "Categories To Show",
+          "relationTo": "categories"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "admin": {
+            "condition": "siblingData.populateBy === 'collection'",
+            "step": 1
+          },
+          "defaultValue": 10,
+          "label": "Limit"
+        },
+        {
+          "name": "selectedDocs",
+          "type": "relationship",
+          "admin": {
+            "condition": "siblingData.populateBy === 'selection'"
+          },
+          "hasMany": true,
+          "label": "Selection",
+          "relationTo": ["posts"]
+        }
+      ],
+      "labels": {
+        "plural": "Archives",
+        "singular": "Archive"
+      }
+    },
+    {
+      "slug": "formBlock",
+      "interfaceName": "FormBlock",
+      "fields": [
+        {
+          "name": "form",
+          "type": "relationship",
+          "relationTo": "forms",
+          "required": true
+        },
+        {
+          "name": "enableIntro",
+          "type": "checkbox",
+          "label": "Enable Intro Content"
+        },
+        {
+          "name": "introContent",
+          "type": "richText",
+          "admin": {
+            "condition": "siblingData?.enableIntro"
+          },
+          "label": "Intro Content",
+          "editor": {
+            "type": "lexical",
+            "features": [
+              "rootFeatures",
+              "HeadingFeature",
+              "FixedToolbarFeature",
+              "InlineToolbarFeature"
+            ],
+            "headingSizes": ["h1", "h2", "h3", "h4"]
+          }
+        }
+      ],
+      "graphQL": {
+        "singularName": "FormBlock"
+      },
+      "labels": {
+        "plural": "Form Blocks",
+        "singular": "Form Block"
+      }
+    }
+  ],
+  "richTextFields": [
+    {
+      "path": "collections.Posts.fields.content",
+      "name": "content",
+      "type": "richText",
+      "label": false,
+      "required": true,
+      "editor": {
+        "type": "lexical",
+        "features": [
+          "rootFeatures",
+          "HeadingFeature",
+          "BlocksFeature",
+          "FixedToolbarFeature",
+          "InlineToolbarFeature",
+          "HorizontalRuleFeature"
+        ],
+        "headingSizes": ["h1", "h2", "h3", "h4"],
+        "blocks": [
+          {
+            "slug": "banner",
+            "interfaceName": "BannerBlock"
+          },
+          {
+            "slug": "code",
+            "interfaceName": "CodeBlock"
+          },
+          {
+            "slug": "mediaBlock",
+            "interfaceName": "MediaBlock"
+          },
+          {
+            "slug": "faq",
+            "interfaceName": "FAQBlock"
+          }
+        ]
+      }
+    },
+    {
+      "path": "blocks.FAQ.fields.items[].answer",
+      "name": "answer",
+      "type": "richText",
+      "label": "Answer",
+      "required": true,
+      "editor": {
+        "type": "lexical",
+        "features": [
+          "rootFeatures",
+          "FixedToolbarFeature",
+          "InlineToolbarFeature"
+        ]
+      }
+    },
+    {
+      "path": "blocks.Banner.fields.content",
+      "name": "content",
+      "type": "richText",
+      "label": false,
+      "required": true,
+      "editor": {
+        "type": "lexical",
+        "features": [
+          "rootFeatures",
+          "FixedToolbarFeature",
+          "InlineToolbarFeature"
+        ]
+      }
+    },
+    {
+      "path": "blocks.Content.fields.columns[].richText",
+      "name": "richText",
+      "type": "richText",
+      "label": false,
+      "editor": {
+        "type": "lexical",
+        "features": [
+          "rootFeatures",
+          "HeadingFeature",
+          "FixedToolbarFeature",
+          "InlineToolbarFeature"
+        ],
+        "headingSizes": ["h2", "h3", "h4"]
+      }
+    },
+    {
+      "path": "blocks.CallToAction.fields.richText",
+      "name": "richText",
+      "type": "richText",
+      "label": false,
+      "editor": {
+        "type": "lexical",
+        "features": [
+          "rootFeatures",
+          "HeadingFeature",
+          "FixedToolbarFeature",
+          "InlineToolbarFeature"
+        ],
+        "headingSizes": ["h1", "h2", "h3", "h4"]
+      }
+    },
+    {
+      "path": "blocks.Archive.fields.introContent",
+      "name": "introContent",
+      "type": "richText",
+      "label": "Intro Content",
+      "editor": {
+        "type": "lexical",
+        "features": [
+          "rootFeatures",
+          "HeadingFeature",
+          "FixedToolbarFeature",
+          "InlineToolbarFeature"
+        ],
+        "headingSizes": ["h1", "h2", "h3", "h4"]
+      }
+    },
+    {
+      "path": "blocks.FormBlock.fields.introContent",
+      "name": "introContent",
+      "type": "richText",
+      "label": "Intro Content",
+      "admin": {
+        "condition": "siblingData?.enableIntro"
+      },
+      "editor": {
+        "type": "lexical",
+        "features": [
+          "rootFeatures",
+          "HeadingFeature",
+          "FixedToolbarFeature",
+          "InlineToolbarFeature"
+        ],
+        "headingSizes": ["h1", "h2", "h3", "h4"]
+      }
+    },
+    {
+      "path": "collections.Pages.fields.hero.richText",
+      "name": "richText",
+      "type": "richText",
+      "label": false,
+      "editor": {
+        "type": "lexical",
+        "features": [
+          "rootFeatures",
+          "HeadingFeature",
+          "FixedToolbarFeature",
+          "InlineToolbarFeature"
+        ],
+        "headingSizes": ["h1", "h2", "h3", "h4"]
+      }
+    },
+    {
+      "path": "editor.defaultLexical",
+      "name": "defaultLexical",
+      "type": "lexical",
+      "features": [
+        "rootFeatures",
+        "LinkFeature"
+      ],
+      "linkFeature": {
+        "enabledCollections": ["pages", "posts"],
+        "fields": [
+          {
+            "name": "linkType",
+            "type": "select",
+            "options": [
+              {
+                "label": "Internal",
+                "value": "internal"
+              },
+              {
+                "label": "Custom URL",
+                "value": "custom"
+              }
+            ]
+          },
+          {
+            "name": "doc",
+            "type": "relationship",
+            "admin": {
+              "condition": "siblingData?.linkType === 'internal'"
+            },
+            "relationTo": ["pages", "posts"]
+          },
+          {
+            "name": "url",
+            "type": "text",
+            "admin": {
+              "condition": "siblingData?.linkType !== 'internal'"
+            },
+            "label": "Enter URL",
+            "required": true
+          },
+          {
+            "name": "newTab",
+            "type": "checkbox"
+          }
+        ]
+      }
+    }
+  ]
+}
+

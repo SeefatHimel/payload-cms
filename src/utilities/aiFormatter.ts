@@ -1,10 +1,9 @@
 /**
  * AI Content Formatter - Multi-Provider Support
- * Supports: Google Gemini, OpenAI, and more
+ * Supports: OpenRouter API
  * Formats and enhances content for Payload CMS Lexical format
  */
 
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { formatContentWithAI as formatWithProvider, batchFormatFAQsWithAI } from './aiProvider'
 
 interface FormatOptions {
@@ -15,46 +14,39 @@ interface FormatOptions {
 }
 
 /**
- * Format content using Google Gemini AI
+ * Format content using OpenRouter AI
  */
 export async function formatContentWithAI(
   content: string,
   options: FormatOptions = {}
 ): Promise<string> {
-  const apiKey = process.env.GOOGLE_AI_API_KEY
+  const { getAIProvider } = await import('./aiProvider')
+  const config = getAIProvider()
 
-  if (!apiKey) {
-    console.warn('[AI Formatter] ⚠️ GOOGLE_AI_API_KEY not set, skipping AI formatting')
+  if (!config.apiKey || config.provider === 'none') {
+    console.warn('[AI Formatter] ⚠️ OPENROUTER_API_KEY not set, skipping AI formatting')
     return content
   }
 
   try {
-    const modelName = process.env.GOOGLE_AI_MODEL || 'gemini-2.0-flash-exp'
-    console.log(`[AI Formatter] 🤖 Initializing Google Gemini AI (model: ${modelName})...`)
-    
-    const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: modelName })
-
     const prompt = buildFormattingPrompt(content, options)
     const contentLength = content.length
 
-    console.log(`[AI Formatter] 📤 Sending ${contentLength} characters to Gemini for formatting...`)
+    console.log(`[AI Formatter] 📤 Sending ${contentLength} characters to OpenRouter for formatting...`)
     console.log(`[AI Formatter] 📋 Options:`, options)
     
     const startTime = Date.now()
-    const result = await model.generateContent(prompt)
-    const response = await result.response
-    const formattedText = response.text()
+    const formattedText = await formatWithProvider(content, prompt)
     const endTime = Date.now()
     const duration = ((endTime - startTime) / 1000).toFixed(2)
 
-    console.log(`[AI Formatter] ✅ Successfully formatted content with Gemini!`)
+    console.log(`[AI Formatter] ✅ Successfully formatted content with OpenRouter!`)
     console.log(`[AI Formatter] ⏱️  Processing time: ${duration}s`)
     console.log(`[AI Formatter] 📊 Original length: ${contentLength} chars → Formatted length: ${formattedText.length} chars`)
     
     return formattedText
   } catch (error) {
-    console.error('[AI Formatter] ❌ Error formatting content with Gemini:', error)
+    console.error('[AI Formatter] ❌ Error formatting content with OpenRouter:', error)
     if (error instanceof Error) {
       console.error('[AI Formatter] Error details:', error.message)
     }
@@ -236,7 +228,7 @@ export async function batchFormatFAQs(
   const startTime = Date.now()
 
   try {
-    // Use multi-provider system (OpenAI or Google Gemini)
+    // Use OpenRouter API
     const formattedBlocks = await batchFormatFAQsWithAI(inputData)
 
     // Map formatted blocks back to original order
@@ -286,54 +278,155 @@ export async function batchFormatFAQs(
 
 export async function enhanceContentQuality(
   content: string,
-  _context?: string
+  _context?: string,
+  onRequestResponse?: (request: any, response: any) => void
 ): Promise<string> {
-  const payloadCMSPrompt = `You are a content enhancer for Payload CMS. Your task is to improve the TEXT CONTENT ONLY while preserving the original structure and formatting.
+  const payloadCMSPrompt = `You are a content formatter for Payload CMS. Your task is to preserve content EXACTLY but format it for automatic block detection when block markers are present.
 
-CRITICAL INSTRUCTIONS:
-- DO NOT change the structure, spacing, or formatting
-- DO NOT reorganize paragraphs or sections
-- DO NOT convert lists to different formats
-- DO NOT add or remove headings
-- ONLY improve the clarity, grammar, and readability of the text itself
-- PRESERVE all original bullet points, spacing, and design elements
-- PRESERVE all original formatting (bold, italic, etc.)
-- Keep the exact same paragraph breaks and structure
+CRITICAL CONTENT PRESERVATION:
+- DO NOT change ANY text, words, or content meaning
+- DO NOT improve, enhance, or modify the actual text
+- DO NOT fix grammar, spelling, or clarity
+- DO NOT change wording, phrasing, or sentence structure
+- DO NOT remove or skip any sections, especially FAQ sections
+- PRESERVE all original text exactly as written
+- MUST include ALL content from the input, including FAQ sections
 
-What you SHOULD do:
-- Fix grammar and spelling errors
-- Improve sentence clarity and flow
-- Enhance readability without changing meaning
-- Make minor wording improvements
-- Keep the same tone and style
+BLOCK MARKERS & FORMATTING:
+The content may contain special block markers that indicate Payload CMS blocks. When you see these markers, format the content structure (not the text) to make it parseable:
 
-What you SHOULD NOT do:
-- Change paragraph structure
-- Reorganize content
-- Add or remove headings
-- Change list formatting
-- Modify spacing or indentation
-- Restructure tables (only improve text within them)
+1. \`##FAQ\` - FAQ Block Marker (CRITICAL - DO NOT REMOVE FAQ SECTIONS)
+   When you see \`##FAQ\` or \`##FAQ...\` (with additional text), you MUST:
+   - KEEP the entire FAQ section in your response
+   - Format questions on separate lines (as headings or paragraphs ending with "?")
+   - Format answers on separate lines immediately following each question
+   - If questions and answers are on the same line, split them into separate lines
+   - Preserve all original text exactly
+   
+   EXAMPLE INPUT:
+   \`\`\`
+   ##FAQFrequently Asked Questions
+   
+   What platforms is Terra Nova available on? Terra Nova is available on Windows and Mac.
+   
+   Can I play multiplayer? Yes, multiplayer mode allows you to form alliances.
+   \`\`\`
+   
+   EXAMPLE OUTPUT (format structure, preserve text):
+   \`\`\`
+   ##FAQ
+   
+   Frequently Asked Questions
+   
+   What platforms is Terra Nova available on?
+   Terra Nova is available on Windows and Mac.
+   
+   Can I play multiplayer?
+   Yes, multiplayer mode allows you to form alliances.
+   \`\`\`
 
-Return the enhanced content with EXACTLY the same structure, spacing, and formatting:`
+2. \`##BANNER\` - Banner Block Marker
+   When you see \`##BANNER\` or \`##BANNER...\` (with additional text), you MUST:
+   - Preserve the text exactly
+   - Keep it as a single block of content
+   - Preserve all original text exactly
 
-  console.log(`[AI Formatter] 📤 Sending ${content.length} characters with Payload CMS instructions...`)
+3. \`##CODE\` - Code Block Marker
+   When you see \`##CODE\` or \`##CODE...\` (with additional text), you MUST:
+   - Preserve all code exactly as written
+   - Keep code formatting intact
+   - Preserve all original text exactly
+
+4. \`##MEDIABLOCK\` - MediaBlock Block Marker
+   When you see \`##MEDIABLOCK\` or \`##MEDIABLOCK...\` (with additional text), you MUST:
+   - Preserve captions and descriptions exactly
+   - Preserve all original text exactly
+
+5. \`##CTA\` - Call to Action Block Marker
+   When you see \`##CTA\` or \`##CTA...\` (with additional text), you MUST:
+   - Preserve the content exactly
+   - Format structure for automatic block detection
+   - Preserve all original text exactly
+
+6. \`##CONTENT\` - Content Block Marker
+   When you see \`##CONTENT\` or \`##CONTENT...\` (with additional text), you MUST:
+   - Preserve the content exactly
+   - Format structure for automatic block detection
+   - Preserve all original text exactly
+
+PAYLOAD CMS BLOCK STRUCTURES:
+
+FAQBlock Block Structure:
+- blockType: "faq"
+- title: text (optional)
+- items: Array of {
+  question: text
+  answer: richText (Lexical format)
+}
+
+BannerBlock Block Structure:
+- blockType: "banner"
+- style: "info" | "warning" | "error" | "success"
+- content: richText (Lexical format)
+
+CodeBlock Block Structure:
+- blockType: "code"
+- language: "typescript" | "javascript" | "css"
+- code: code (required)
+
+MediaBlock Block Structure:
+- blockType: "mediaBlock"
+- media: upload (required)
+
+CallToActionBlock Block Structure:
+- blockType: "cta"
+- richText: richText (Lexical format)
+- links: Array of {
+  link: group
+}
+
+ContentBlock Block Structure:
+- blockType: "content"
+- columns: Array of {
+  size: select
+  richText: richText (Lexical format)
+  enableLink: checkbox
+  link: group
+}
+
+YOUR TASK:
+1. Preserve ALL text content exactly as provided - DO NOT REMOVE ANY SECTIONS
+2. When you see block markers (##FAQ, ##BANNER, etc.), format the STRUCTURE (line breaks, organization) to make it parseable
+3. Do NOT change any actual text content
+4. Keep block markers exactly as written
+5. Format content after markers in a way that can be automatically converted to Payload CMS blocks
+6. CRITICAL: If you see ##FAQ or FAQ sections, you MUST include them in your response - DO NOT SKIP THEM
+
+VALIDATION CHECKLIST BEFORE RETURNING:
+- Did I include ALL FAQ questions and answers from the input?
+- Did I preserve ALL text exactly as written?
+- Did I format the structure (line breaks) for block detection?
+- Did I keep all block markers (##FAQ, ##BANNER, etc.)?
+
+Return the content with preserved text but formatted structure for block detection.`
+
+  console.log(`[AI Formatter] 📤 Sending ${content.length} characters for formatting (preserving text, structuring for blocks)...`)
   const startTime = Date.now()
 
   try {
-    // Use multi-provider system (OpenAI or Google Gemini)
-    const enhancedText = await formatWithProvider(content, payloadCMSPrompt)
+    // Use OpenRouter API
+    const preservedText = await formatWithProvider(content, payloadCMSPrompt, onRequestResponse)
 
     const endTime = Date.now()
     const duration = ((endTime - startTime) / 1000).toFixed(2)
 
-    console.log(`[AI Formatter] ✅ Content enhanced for Payload CMS successfully!`)
+    console.log(`[AI Formatter] ✅ Content preserved for Payload CMS successfully!`)
     console.log(`[AI Formatter] ⏱️  Processing time: ${duration}s`)
-    console.log(`[AI Formatter] 📊 Original: ${content.length} chars → Enhanced: ${enhancedText.length} chars`)
+    console.log(`[AI Formatter] 📊 Original: ${content.length} chars → Preserved: ${preservedText.length} chars`)
 
-    return enhancedText
+    return preservedText
   } catch (error) {
-    console.error('[AI Formatter] ❌ Error enhancing content:', error)
+    console.error('[AI Formatter] ❌ Error preserving content:', error)
     if (error instanceof Error) {
       console.error('[AI Formatter] Error message:', error.message)
     }

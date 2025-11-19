@@ -1,0 +1,95 @@
+Adventures of Terra Nova
+
+“Adventures of Terra Nova” is an epic open-world strategy game where players build empires, form alliances, and explore unknown territories. Lead your civilization to glory or face the challenges of a dynamic, ever-changing world.
+
+Introduction
+
+In Terra Nova, every decision matters. Manage resources, expand your cities, and engage in diplomacy or warfare. The game combines real-time strategy with turn-based elements to create a unique experience.
+
+Getting Started
+
+Prerequisites
+
+• PC or Mac with minimum specs:
+
+• 8GB RAM
+
+• Intel i5 processor
+
+• 50GB free storage
+
+• Stable internet connection for multiplayer mode
+
+• Terra Nova game client installed
+
+Installation Steps
+
+• Download the game from the official website: https://www.terranova-game.com
+
+• Run the installer and follow on-screen instructions
+
+• Launch the game and create your account
+
+• Choose your starting civilization
+
+Gameplay Features
+
+• Civilizations: Choose from Humans, Elves, Dwarves, or Orcs
+
+• Alliances: Team up with other players or AI factions
+
+• Exploration: Discover hidden lands, treasures, and quests
+
+• Combat: Real-time battles with strategic planning
+
+• Economy: Trade resources and manage city production
+
+Banner Block Example
+
+⚠️ Pro Tip: Always scout surrounding territories before expanding to avoid ambushes.
+
+Code Block Example (AI Strategy Snippet)
+
+# Simple AI logic for troop movement
+
+def move_troops(troops, target):
+
+for unit in troops:
+
+if unit.position != target:
+
+unit.move_towards(target)
+
+Media Example
+
+(Insert image of game map here) Caption: Explore the vast lands of Terra Nova.
+
+##FAQFrequently Asked Questions
+
+What platforms is Terra Nova available on? Terra Nova is available on Windows and Mac. A mobile companion app is planned for the next release.
+
+Can I play multiplayer? Yes, multiplayer mode allows you to form alliances, trade, and fight in real-time battles with other players.
+
+How do I join an alliance? Go to the “Alliance” menu in-game, browse available alliances, and request to join. Leaders can accept or reject requests.
+
+Are there in-game purchases? Yes, optional cosmetic items and expansion packs are available. All core gameplay is free.
+
+Is there a tutorial for beginners? Absolutely! The first mission serves as a tutorial, and in-game tips help new players get started.
+
+Conclusion
+
+Terra Nova offers endless adventures, strategic gameplay, and a vibrant online community. Start your journey today, explore unknown territories, and become the ultimate ruler of Terra Nova!
+
+✅ Import Checklist
+
+• H1 title: Adventures of Terra Nova
+
+• H2 headings for major sections (Introduction, Getting Started, Gameplay Features, FAQ, Conclusion)
+
+• H3 headings for subsections (Prerequisites, Installation Steps)
+
+• FAQ section formatted correctly
+
+• Code blocks and banner included
+
+• Media captions added

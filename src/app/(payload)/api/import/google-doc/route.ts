@@ -13,8 +13,40 @@ import { parseFAQsFromLexical } from '@/utilities/faqParser'
 import { google } from 'googleapis'
 import type { docs_v1 } from 'googleapis'
 import type { Post } from '@/payload-types'
+import { writeFile, mkdir } from 'fs/promises'
+import { join } from 'path'
 
 export const maxDuration = 300 // 5 minutes for large documents
+
+/**
+ * Helper function to save files in organized folders by doc ID and name
+ */
+async function saveToDocFolder(
+  docId: string,
+  docTitle: string,
+  filename: string,
+  content: string | object,
+  subfolder?: string
+): Promise<string | null> {
+  try {
+    const baseDir = join(process.cwd(), 'debug', 'google-docs')
+    const safeTitle = (docTitle || 'untitled').replace(/[^a-z0-9]/gi, '_').toLowerCase()
+    const folderName = `${docId}-${safeTitle}`
+    const folderPath = subfolder ? join(baseDir, folderName, subfolder) : join(baseDir, folderName)
+
+    await mkdir(folderPath, { recursive: true })
+
+    const filePath = join(folderPath, filename)
+    const contentToWrite = typeof content === 'string' ? content : JSON.stringify(content, null, 2)
+
+    await writeFile(filePath, contentToWrite, 'utf-8')
+    console.log(`[Import] 💾 Saved to: ${filePath}`)
+    return filePath
+  } catch (error) {
+    console.warn(`[Import] ⚠️  Failed to save file ${filename}:`, error)
+    return null
+  }
+}
 
 /**
  * Enhance text content in Lexical nodes while preserving structure
@@ -151,7 +183,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     console.log(`[Import] 🔧 AI Configuration:`)
     console.log(`[Import]    - useAI requested: ${useAI}`)
-    console.log(`[Import]    - Provider: ${aiConfig.provider === 'openai' ? 'OpenAI' : aiConfig.provider === 'google' ? 'Google Gemini' : 'None'}`)
+    console.log(`[Import]    - Provider: ${aiConfig.provider === 'openrouter' ? 'OpenRouter' : 'None'}`)
     if (hasApiKey) {
       console.log(`[Import]    - Model: ${aiConfig.model || 'default'}`)
     }
@@ -219,10 +251,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       doc = docResponse.data
       title = doc?.title || 'Untitled Document'
 
+      // Save Google Doc response to organized folder
+      await saveToDocFolder(docId, title, 'google-doc-response.json', docResponse.data)
+      await saveToDocFolder(docId, title, 'document-data.json', doc)
+
       // Parse document to Lexical format
       console.log(`[Import] Parsing document to Lexical format`)
       lexicalContent = parseGoogleDocToLexical(doc)
       console.log(`[Import] Parsed ${lexicalContent.root.children.length} content blocks`)
+
+      // Save parsed Lexical content
+      await saveToDocFolder(docId, title, 'parsed-lexical.json', lexicalContent)
+
+      // Also save a plain text version for easy reading
+      const textContent = extractTextFromLexical(lexicalContent)
+      await saveToDocFolder(docId, title, 'extracted-text.txt', textContent)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error)
       console.warn(`[Import] Documents API failed: ${errorMessage}`)
@@ -281,10 +324,49 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               doc = convertedDocResponse.data
               title = doc?.title || title
 
+              // Save raw API response to file if enabled
+              if (process.env.SAVE_GOOGLE_DOCS_RESPONSE === 'true') {
+                try {
+                  const debugDir = join(process.cwd(), 'debug')
+                  await mkdir(debugDir, { recursive: true })
+
+                  const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+                  const safeTitle = (title || 'untitled').replace(/[^a-z0-9]/gi, '_').toLowerCase()
+                  const filename = `google-doc-converted-${safeTitle}-${convertedDocId.substring(0, 8)}-${timestamp}`
+
+                  const rawResponsePath = join(debugDir, `${filename}-raw-api-response.json`)
+                  await writeFile(rawResponsePath, JSON.stringify(convertedDocResponse.data, null, 2), 'utf-8')
+                  console.log(`[Import] 💾 Saved converted document API response to: ${rawResponsePath}`)
+                } catch (saveError) {
+                  console.warn(`[Import] ⚠️  Failed to save debug files:`, saveError)
+                }
+              }
+
               // Parse document to Lexical format
               console.log(`[Import] Parsing converted document to Lexical format`)
               lexicalContent = parseGoogleDocToLexical(doc)
               console.log(`[Import] Parsed ${lexicalContent.root.children.length} content blocks`)
+
+              // Save parsed Lexical content if enabled
+              if (process.env.SAVE_GOOGLE_DOCS_RESPONSE === 'true') {
+                try {
+                  const debugDir = join(process.cwd(), 'debug')
+                  const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+                  const safeTitle = (title || 'untitled').replace(/[^a-z0-9]/gi, '_').toLowerCase()
+                  const filename = `google-doc-converted-${safeTitle}-${convertedDocId.substring(0, 8)}-${timestamp}`
+
+                  const lexicalPath = join(debugDir, `${filename}-parsed-lexical.json`)
+                  await writeFile(lexicalPath, JSON.stringify(lexicalContent, null, 2), 'utf-8')
+                  console.log(`[Import] 💾 Saved parsed Lexical content to: ${lexicalPath}`)
+
+                  const textContent = extractTextFromLexical(lexicalContent)
+                  const textPath = join(debugDir, `${filename}-extracted-text.txt`)
+                  await writeFile(textPath, textContent, 'utf-8')
+                  console.log(`[Import] 💾 Saved extracted text to: ${textPath}`)
+                } catch (saveError) {
+                  console.warn(`[Import] ⚠️  Failed to save Lexical debug files:`, saveError)
+                }
+              }
 
               // Update docId to use the converted document for image extraction
               docId = convertedDocId
@@ -427,34 +509,66 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
+    // Track blocks created for API response
+    const blocksCreated = {
+      faq: 0,
+      banner: 0,
+      code: 0,
+      media: 0,
+      total: 0,
+    }
+
     // Detect and extract FAQ sections BEFORE AI enhancement
     console.log(`[Import] 🔍 Detecting FAQ sections...`)
     const { faqBlocks, remainingNodes } = parseFAQsFromLexical(lexicalContent.root.children)
 
     if (faqBlocks.length > 0) {
-      const totalQuestions = faqBlocks.reduce((sum, faq) => sum + faq.items.length, 0)
+      const totalQuestions = faqBlocks.reduce((sum, faq) => {
+        const block = faq?.block || faq // Support both old and new format
+        return sum + (block?.items?.length || 0)
+      }, 0)
       console.log(`[Import] ✅ Found ${faqBlocks.length} FAQ section(s) with ${totalQuestions} total questions`)
 
       // Use AI to format FAQ questions and answers if enabled (BATCH FORMATTING - 1 API call instead of 12+)
-      if (useAI && process.env.GOOGLE_AI_API_KEY) {
+      if (useAI && aiConfig.apiKey) {
         console.log(`[Import] 🤖 Batch formatting FAQ content with AI (1 API call for all FAQs)...`)
         try {
           // Prepare FAQ blocks for batch formatting
-          const faqBlocksForFormatting: FAQBlockForFormatting[] = faqBlocks.map(block => ({
-            title: block.title,
-            items: block.items.map(item => ({
-              question: item.question,
-              answer: extractTextFromLexical(item.answer), // Convert Lexical to plain text
-            })),
-          }))
+          const faqBlocksForFormatting: FAQBlockForFormatting[] = faqBlocks.map(faqWithPos => {
+            const block = faqWithPos?.block || faqWithPos // Support both old and new format
+            return {
+              title: block.title,
+              items: block.items.map(item => ({
+                question: item.question,
+                answer: extractTextFromLexical(item.answer), // Convert Lexical to plain text
+              })),
+            }
+          })
 
           // Batch format all FAQs in a single API call
-          const formattedFAQs = await batchFormatFAQs(faqBlocksForFormatting)
+          const { batchFormatFAQsWithAI } = await import('@/utilities/aiProvider')
+          const formattedFAQsData = await batchFormatFAQsWithAI(
+            faqBlocksForFormatting.map((block, blockIndex) => ({
+              blockIndex,
+              title: block.title || null,
+              items: block.items.map((item, itemIndex) => ({
+                itemIndex,
+                question: item.question,
+                answer: item.answer,
+              })),
+            })),
+            async (request, response) => {
+              // Save FAQ formatting prompt and API response
+              await saveToDocFolder(docId, title, 'ai-faq-prompt.json', request, 'ai')
+              await saveToDocFolder(docId, title, 'ai-faq-response.json', response, 'ai')
+            }
+          )
 
           // Map formatted results back to original FAQ blocks
           for (let blockIndex = 0; blockIndex < faqBlocks.length; blockIndex++) {
-            const originalBlock = faqBlocks[blockIndex]
-            const formattedBlock = formattedFAQs[blockIndex]
+            const faqWithPos = faqBlocks[blockIndex]
+            const originalBlock = faqWithPos?.block || faqWithPos // Support both old and new format
+            const formattedBlock = formattedFAQsData[blockIndex]
 
             if (formattedBlock) {
               // Update title if formatted
@@ -496,25 +610,45 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
 
       // Convert FAQ blocks to Lexical block nodes (Payload CMS format)
-      const faqBlockNodes = faqBlocks.map((faqBlock) => ({
-        type: 'block',
-        fields: {
-          blockType: 'faq',
-          title: faqBlock.title || null,
-          items: faqBlock.items.map((item, index) => ({
-            question: item.question,
-            answer: item.answer,
-            id: `faq-item-${Date.now()}-${index}`, // Generate unique ID for each item
-          })),
-        },
-        format: '',
-        version: 2,
-      }))
+      // Sort by insert index (descending) so we can insert from end to beginning
+      const sortedFAQBlocks = [...faqBlocks].sort((a, b) => {
+        const indexA = a?.insertIndex ?? 0
+        const indexB = b?.insertIndex ?? 0
+        return indexB - indexA
+      })
+      
+      const finalNodes: LexicalNode[] = [...remainingNodes]
+      
+      // Insert FAQ blocks at their original positions (insert from end to beginning to preserve indices)
+      for (const faqBlockWithPos of sortedFAQBlocks) {
+        // Support both old format (direct block) and new format (with position)
+        const block = faqBlockWithPos?.block || faqBlockWithPos
+        const insertIndex = faqBlockWithPos?.insertIndex ?? finalNodes.length // Default to end if no index
+        
+        const faqBlockNode = {
+          type: 'block' as const,
+          fields: {
+            blockType: 'faq' as const,
+            title: block.title || null,
+            items: block.items.map((item, index) => ({
+              question: item.question,
+              answer: item.answer,
+              id: `faq-item-${Date.now()}-${index}`, // Generate unique ID for each item
+            })),
+          },
+          format: '',
+          version: 2,
+        }
+        
+        // Insert at the tracked position (or at the end if index is invalid)
+        const safeIndex = Math.min(insertIndex, finalNodes.length)
+        finalNodes.splice(safeIndex, 0, faqBlockNode)
+      }
 
-      // Reconstruct content: remaining nodes + FAQ blocks
-      // Insert FAQ blocks where they appeared (at the end of remaining content for now)
-      lexicalContent.root.children = [...remainingNodes, ...faqBlockNodes]
-      console.log(`[Import] ✅ Inserted ${faqBlockNodes.length} FAQ block(s) into content`)
+      lexicalContent.root.children = finalNodes
+      blocksCreated.faq = faqBlocks.length
+      blocksCreated.total += faqBlocks.length
+      console.log(`[Import] ✅ Inserted ${faqBlocks.length} FAQ block(s) at their original positions`)
     } else {
       // No FAQ sections found, use original content
       lexicalContent.root.children = remainingNodes.length > 0 ? remainingNodes : lexicalContent.root.children
@@ -524,7 +658,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Optional AI enhancement
     if (useAI && aiConfig.apiKey) {
       try {
-        const providerName = aiConfig.provider === 'openai' ? 'OpenAI' : aiConfig.provider === 'google' ? 'Google Gemini' : 'AI'
+        const providerName = aiConfig.provider === 'openrouter' ? 'OpenRouter' : 'AI'
         console.log(`[Import] 🤖 ========================================`)
         console.log(`[Import] 🤖 AI FORMATTING ENABLED - Using ${providerName}`)
         console.log(`[Import] 🤖 ========================================`)
@@ -537,7 +671,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           console.warn(`[Import] ⚠️ No text content to enhance, skipping AI formatting`)
         } else {
           // Enhance text content with AI (preserves structure, improves text quality)
-          const enhancedText = await enhanceContentQuality(textContent, 'blog post')
+          const enhancedText = await enhanceContentQuality(
+            textContent,
+            'blog post',
+            async (request, response) => {
+              // Save content enhancement prompt and API response
+              await saveToDocFolder(docId, title, 'ai-content-prompt.json', request, 'ai')
+              await saveToDocFolder(docId, title, 'ai-content-response.json', response, 'ai')
+            }
+          )
 
           // Instead of replacing the entire structure, enhance text within existing nodes
           // This preserves original formatting, spacing, and design
@@ -565,11 +707,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
         console.warn(`[Import] ⚠️ Continuing with original content (no AI enhancement)`)
       }
-    } else if (useAI && !process.env.GOOGLE_AI_API_KEY) {
+    } else if (useAI && !aiConfig.apiKey) {
       console.warn(`[Import] ⚠️ ========================================`)
       console.warn(`[Import] ⚠️ AI FORMATTING REQUESTED BUT API KEY NOT SET`)
       console.warn(`[Import] ⚠️ ========================================`)
-      console.warn(`[Import] Set GOOGLE_AI_API_KEY in your .env file to enable AI formatting`)
+      console.warn(`[Import] Set OPENROUTER_API_KEY in your .env file to enable AI formatting`)
     } else if (!useAI) {
       console.log(`[Import] ℹ️  AI formatting not requested (useAI: false)`)
     }
@@ -665,6 +807,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }))
 
       contentWithImages.root.children.push(...imageBlocks)
+      blocksCreated.media = imageBlocks.length
+      blocksCreated.total += imageBlocks.length
     }
 
     // Create Payload request object
@@ -746,6 +890,34 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       })
     }
 
+    // Count blocks in final content for response
+    const finalContent = post.content as any
+    if (finalContent?.root?.children) {
+      const blockCounts = {
+        faq: 0,
+        banner: 0,
+        code: 0,
+        media: 0,
+      }
+
+      finalContent.root.children.forEach((node: any) => {
+        if (node.type === 'block' && node.fields?.blockType) {
+          const blockType = node.fields.blockType
+          if (blockType === 'faq') blockCounts.faq++
+          else if (blockType === 'banner') blockCounts.banner++
+          else if (blockType === 'code') blockCounts.code++
+          else if (blockType === 'mediaBlock') blockCounts.media++
+        }
+      })
+      
+      // Use actual counts from final content
+      blocksCreated.faq = blockCounts.faq
+      blocksCreated.banner = blockCounts.banner
+      blocksCreated.code = blockCounts.code
+      blocksCreated.media = blockCounts.media
+      blocksCreated.total = blockCounts.faq + blockCounts.banner + blockCounts.code + blockCounts.media
+    }
+
     return NextResponse.json({
       success: true,
       post: {
@@ -754,6 +926,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         slug: post.slug,
       },
       imagesProcessed: imageMap.size,
+      blocks: {
+        faq: blocksCreated.faq,
+        banner: blocksCreated.banner,
+        code: blocksCreated.code,
+        media: blocksCreated.media,
+        total: blocksCreated.total,
+      },
       isUpdate,
     })
   } catch (error) {

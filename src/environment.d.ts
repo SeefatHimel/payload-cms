@@ -9,8 +9,8 @@ declare global {
       GOOGLE_CLIENT_SECRET?: string
       GOOGLE_REDIRECT_URL?: string
       GOOGLE_REFRESH_TOKEN?: string
-      GOOGLE_AI_API_KEY?: string
-      GOOGLE_AI_MODEL?: string
+      OPENROUTER_API_KEY?: string
+      OPENROUTER_MODEL?: string
     }
   }
 }

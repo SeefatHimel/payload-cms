@@ -1,0 +1,1018 @@
+{
+  "root": {
+    "type": "root",
+    "children": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "# My Blog Post Title\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "This is the introduction paragraph of my blog post. Here I explain what the post is about.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "## Main Content Section\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "This is the main content of the blog post. You can write anything here.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "### Subsection\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "More content here...\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "## FAQ\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "What is Payload CMS?\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Payload CMS is a headless CMS built with Node.js and TypeScript. It provides a powerful admin panel and flexible content management system.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "How do I install Payload CMS?\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "You can install Payload CMS using npm, yarn, or pnpm. Simply run: npm install payload\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Can I use Payload CMS with Next.js?\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Yes! Payload CMS works great with Next.js. There are official templates and examples available on the Payload website.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "What databases does Payload CMS support?\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Payload CMS supports PostgreSQL, MongoDB, and SQLite out of the box. You can choose the database that best fits your needs.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "## Conclusion\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "This is the conclusion of the blog post.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "---\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "## Alternative FAQ Format\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "You can also use these formats:\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "### Frequently Asked Questions\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Q: What is the pricing?\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "A: Our pricing starts at $9.99 per month for the basic plan.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Q: Do you offer a free trial?\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "A: Yes, we offer a 14-day free trial with full access to all features.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "### Questions and Answers\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "1. How do I cancel my subscription?\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "You can cancel your subscription at any time from your account settings.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "2. Can I upgrade my plan?\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Yes, you can upgrade or downgrade your plan at any time.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      }
+    ],
+    "direction": "ltr",
+    "format": "",
+    "indent": 0,
+    "version": 1
+  }
+}

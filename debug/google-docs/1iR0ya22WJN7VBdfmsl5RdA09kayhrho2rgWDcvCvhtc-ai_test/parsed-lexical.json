@@ -1,0 +1,1466 @@
+{
+  "root": {
+    "type": "root",
+    "children": [
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Adventures of Terra Nova\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h1",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "“Adventures of Terra Nova” is an epic open-world strategy game where players build empires, form alliances, and explore unknown territories. Lead your civilization to glory or face the challenges of a dynamic, ever-changing world.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Introduction\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h2",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "In Terra Nova, every decision matters. Manage resources, expand your cities, and engage in diplomacy or warfare. The game combines real-time strategy with turn-based elements to create a unique experience.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Getting Started\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h2",
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Prerequisites\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h3",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "PC or Mac with minimum specs:\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "  • ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "8GB RAM\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 1,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "  • ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Intel i5 processor\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 1,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "  • ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "50GB free storage\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 1,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Stable internet connection for multiplayer mode\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Terra Nova game client installed\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Installation Steps\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h3",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Download the game from the official website:\u000b https://www.terranova-game.com\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Run the installer and follow on-screen instructions\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Launch the game and create your account\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Choose your starting civilization\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Gameplay Features\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h2",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Civilizations:",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Choose from Humans, Elves, Dwarves, or Orcs\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Alliances:",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Team up with other players or AI factions\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Exploration:",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Discover hidden lands, treasures, and quests\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Combat:",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Real-time battles with strategic planning\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Economy:",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Trade resources and manage city production\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Banner Block Example\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h2",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "⚠️ ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Pro Tip:",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Always scout surrounding territories before expanding to avoid ambushes.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Code Block Example (AI Strategy Snippet)\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h2",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "# Simple AI logic for troop movement\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "def move_troops(troops, target):\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "    for unit in troops:\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "        if unit.position != target:\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "            unit.move_towards(target)\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Media Example\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h2",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 2,
+            "mode": "normal",
+            "style": "",
+            "text": "(Insert image of game map here)\u000b",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 2,
+            "mode": "normal",
+            "style": "",
+            "text": "Caption: Explore the vast lands of Terra Nova.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "##FAQ\u000bFrequently Asked Questions\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h2",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "What platforms is Terra Nova available on?\u000b",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Terra Nova is available on Windows and Mac. A mobile companion app is planned for the next release.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Can I play multiplayer?\u000b",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Yes, multiplayer mode allows you to form alliances, trade, and fight in real-time battles with other players.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "How do I join an alliance?\u000b",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Go to the “Alliance” menu in-game, browse available alliances, and request to join. Leaders can accept or reject requests.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Are there in-game purchases?\u000b",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Yes, optional cosmetic items and expansion packs are available. All core gameplay is free.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Is there a tutorial for beginners?\u000b",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": " Absolutely! The first mission serves as a tutorial, and in-game tips help new players get started.\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "Conclusion\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h2",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Terra Nova offers endless adventures, strategic gameplay, and a vibrant online community. Start your journey today, explore unknown territories, and become the ultimate ruler of Terra Nova!\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "heading",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 1,
+            "mode": "normal",
+            "style": "",
+            "text": "✅ Import Checklist\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "tag": "h3",
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "H1 title: Adventures of Terra Nova\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "H2 headings for major sections (Introduction, Getting Started, Gameplay Features, FAQ, Conclusion)\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "H3 headings for subsections (Prerequisites, Installation Steps)\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "FAQ section formatted correctly\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Code blocks and banner included\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "• ",
+            "version": 1
+          },
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Media captions added\u000b\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "\n",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "textFormat": 0,
+        "version": 1
+      }
+    ],
+    "direction": "ltr",
+    "format": "",
+    "indent": 0,
+    "version": 1
+  }
+}

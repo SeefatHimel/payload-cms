@@ -1,0 +1,91 @@
+{
+  "description": "Reference structure for FAQ blocks in Payload CMS richText content",
+  "faqBlockStructure": {
+    "type": "block",
+    "fields": {
+      "blockType": "faq",
+      "title": "Frequently Asked Questions",
+      "items": [
+        {
+          "question": "What is Payload CMS?",
+          "answer": {
+            "root": {
+              "type": "root",
+              "children": [
+                {
+                  "type": "paragraph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "detail": 0,
+                      "format": 0,
+                      "mode": "normal",
+                      "style": "",
+                      "text": "Payload CMS is a headless content management system built with TypeScript and Node.js.",
+                      "version": 1
+                    }
+                  ],
+                  "direction": "ltr",
+                  "format": "",
+                  "indent": 0,
+                  "textFormat": 0,
+                  "version": 1
+                }
+              ],
+              "direction": "ltr",
+              "format": "",
+              "indent": 0,
+              "version": 1
+            }
+          }
+        }
+      ]
+    },
+    "format": "",
+    "version": 2
+  },
+  "minimalFAQBlock": {
+    "type": "block",
+    "fields": {
+      "blockType": "faq",
+      "items": [
+        {
+          "question": "Question text here",
+          "answer": {
+            "root": {
+              "type": "root",
+              "children": [
+                {
+                  "type": "paragraph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "Answer text here",
+                      "version": 1
+                    }
+                  ],
+                  "version": 1
+                }
+              ],
+              "version": 1
+            }
+          }
+        }
+      ]
+    },
+    "version": 2
+  },
+  "notes": {
+    "requiredFields": {
+      "blockType": "Must be 'faq'",
+      "items": "Array of FAQ items, at least one required",
+      "items[].question": "Required text field",
+      "items[].answer": "Required richText field in Lexical format"
+    },
+    "optionalFields": {
+      "title": "Optional FAQ section title"
+    },
+    "answerFormat": "The answer field must be a Lexical editor state object with root type and children array"
+  }
+}
+

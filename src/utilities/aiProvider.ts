@@ -1,9 +1,9 @@
 /**
  * Multi-Provider AI Content Formatter
- * Supports: Google Gemini, OpenAI, and more
+ * Supports: OpenRouter API
  */
 
-export type AIProvider = 'google' | 'openai' | 'none'
+export type AIProvider = 'openrouter' | 'none'
 
 interface AIProviderConfig {
   provider: AIProvider
@@ -15,21 +15,12 @@ interface AIProviderConfig {
  * Get the configured AI provider from environment variables
  */
 export function getAIProvider(): AIProviderConfig {
-  // Check OpenAI first (usually has better free tier)
-  if (process.env.OPENAI_API_KEY) {
+  // Use OpenRouter API
+  if (process.env.OPENROUTER_API_KEY) {
     return {
-      provider: 'openai',
-      apiKey: process.env.OPENAI_API_KEY,
-      model: process.env.OPENAI_MODEL || 'gpt-4o-mini', // Fast and cheap
-    }
-  }
-
-  // Fall back to Google Gemini
-  if (process.env.GOOGLE_AI_API_KEY) {
-    return {
-      provider: 'google',
-      apiKey: process.env.GOOGLE_AI_API_KEY,
-      model: process.env.GOOGLE_AI_MODEL || 'gemini-2.0-flash-exp',
+      provider: 'openrouter',
+      apiKey: process.env.OPENROUTER_API_KEY,
+      model: process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini', // Default model via OpenRouter
     }
   }
 
@@ -43,7 +34,8 @@ export function getAIProvider(): AIProviderConfig {
  */
 export async function formatContentWithAI(
   content: string,
-  prompt: string
+  prompt: string,
+  onRequestResponse?: (request: any, response: any) => void
 ): Promise<string> {
   const config = getAIProvider()
 
@@ -53,12 +45,8 @@ export async function formatContentWithAI(
   }
 
   try {
-    if (config.provider === 'openai') {
-      return await formatWithOpenAI(content, prompt, config.apiKey, config.model)
-    }
-
-    if (config.provider === 'google') {
-      return await formatWithGoogle(content, prompt, config.apiKey, config.model)
+    if (config.provider === 'openrouter') {
+      return await formatWithOpenRouter(content, prompt, config.apiKey, config.model, onRequestResponse)
     }
 
     return content
@@ -69,21 +57,19 @@ export async function formatContentWithAI(
 }
 
 /**
- * Format content using OpenAI
+ * Format content using OpenRouter API
  */
-async function formatWithOpenAI(
+async function formatWithOpenRouter(
   content: string,
   prompt: string,
   apiKey: string,
-  model?: string
+  model?: string,
+  onRequestResponse?: (request: any, response: any) => void
 ): Promise<string> {
-  const { OpenAI } = await import('openai')
-  const openai = new OpenAI({ apiKey })
+  console.log(`[AI Provider] 🤖 Using OpenRouter (${model || 'openai/gpt-4o-mini'})...`)
 
-  console.log(`[AI Provider] 🤖 Using OpenAI (${model || 'gpt-4o-mini'})...`)
-
-  const response = await openai.chat.completions.create({
-    model: model || 'gpt-4o-mini',
+  const requestBody = {
+    model: model || 'openai/gpt-4o-mini',
     messages: [
       {
         role: 'system',
@@ -96,36 +82,33 @@ async function formatWithOpenAI(
     ],
     temperature: 0.7,
     max_tokens: 2000,
+  }
+
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
+      'X-Title': 'Payload CMS Content Formatter',
+    },
+    body: JSON.stringify(requestBody),
   })
 
-  const formattedText = response.choices[0]?.message?.content || content
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`OpenRouter API error: ${response.status} ${errorText}`)
+  }
 
-  console.log(`[AI Provider] ✅ Content formatted with OpenAI successfully!`)
-  return formattedText
-}
+  const data = await response.json()
+  const formattedText = data.choices?.[0]?.message?.content || content
 
-/**
- * Format content using Google Gemini
- */
-async function formatWithGoogle(
-  content: string,
-  prompt: string,
-  apiKey: string,
-  model?: string
-): Promise<string> {
-  const { GoogleGenerativeAI } = await import('@google/generative-ai')
-  const genAI = new GoogleGenerativeAI(apiKey)
-  const aiModel = genAI.getGenerativeModel({ model: model || 'gemini-2.0-flash-exp' })
+  // Call callback if provided to save request/response
+  if (onRequestResponse) {
+    onRequestResponse(requestBody, data)
+  }
 
-  console.log(`[AI Provider] 🤖 Using Google Gemini (${model || 'gemini-2.0-flash-exp'})...`)
-
-  const fullPrompt = `${prompt}\n\nContent to format:\n${content}`
-
-  const result = await aiModel.generateContent(fullPrompt)
-  const response = await result.response
-  const formattedText = response.text()
-
-  console.log(`[AI Provider] ✅ Content formatted with Google Gemini successfully!`)
+  console.log(`[AI Provider] ✅ Content formatted with OpenRouter successfully!`)
   return formattedText
 }
 
@@ -141,7 +124,8 @@ export async function batchFormatFAQsWithAI(
       question: string
       answer: string
     }>
-  }>
+  }>,
+  onRequestResponse?: (request: any, response: any) => void
 ): Promise<Array<{
   blockIndex: number
   title?: string | null
@@ -159,12 +143,8 @@ export async function batchFormatFAQsWithAI(
   }
 
   try {
-    if (config.provider === 'openai') {
-      return await batchFormatFAQsWithOpenAI(faqData, config.apiKey, config.model)
-    }
-
-    if (config.provider === 'google') {
-      return await batchFormatFAQsWithGoogle(faqData, config.apiKey, config.model)
+    if (config.provider === 'openrouter') {
+      return await batchFormatFAQsWithOpenRouter(faqData, config.apiKey, config.model, onRequestResponse)
     }
 
     return faqData
@@ -175,9 +155,9 @@ export async function batchFormatFAQsWithAI(
 }
 
 /**
- * Batch format FAQs with OpenAI
+ * Batch format FAQs with OpenRouter API
  */
-async function batchFormatFAQsWithOpenAI(
+async function batchFormatFAQsWithOpenRouter(
   faqData: Array<{
     blockIndex: number
     title?: string | null
@@ -188,7 +168,8 @@ async function batchFormatFAQsWithOpenAI(
     }>
   }>,
   apiKey: string,
-  model?: string
+  model?: string,
+  onRequestResponse?: (request: any, response: any) => void
 ): Promise<Array<{
   blockIndex: number
   title?: string | null
@@ -198,10 +179,7 @@ async function batchFormatFAQsWithOpenAI(
     answer: string
   }>
 }>> {
-  const { OpenAI } = await import('openai')
-  const openai = new OpenAI({ apiKey })
-
-  console.log(`[AI Provider] 🤖 Batch formatting FAQs with OpenAI (${model || 'gpt-4o-mini'})...`)
+  console.log(`[AI Provider] 🤖 Batch formatting FAQs with OpenRouter (${model || 'openai/gpt-4o-mini'})...`)
 
   const prompt = `You are a content formatter for Payload CMS. Your task is to format and improve FAQ content while preserving meaning and structure.
 
@@ -222,8 +200,8 @@ Return a JSON array with the same structure, where each FAQ block has:
 
 Return ONLY the JSON array, nothing else:`
 
-  const response = await openai.chat.completions.create({
-    model: model || 'gpt-4o-mini',
+  const requestBody = {
+    model: model || 'openai/gpt-4o-mini',
     messages: [
       {
         role: 'system',
@@ -235,9 +213,33 @@ Return ONLY the JSON array, nothing else:`
       },
     ],
     temperature: 0.7,
+  }
+
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
+      'X-Title': 'Payload CMS FAQ Formatter',
+    },
+    body: JSON.stringify(requestBody),
   })
 
-  const responseText = response.choices[0]?.message?.content || '[]'
+  if (!response.ok) {
+    const errorText = await response.text()
+    console.error('[AI Provider] ❌ OpenRouter API error:', response.status, errorText)
+    return faqData
+  }
+
+  const data = await response.json()
+  const responseText = data.choices?.[0]?.message?.content || '[]'
+  
+  // Call callback if provided to save request/response
+  if (onRequestResponse) {
+    onRequestResponse({ ...requestBody, prompt }, data)
+  }
+
   let jsonData: any
 
   try {
@@ -267,98 +269,12 @@ Return ONLY the JSON array, nothing else:`
       jsonData = [jsonData]
     }
   } catch (error) {
-    console.error('[AI Provider] ❌ Failed to parse OpenAI JSON response:', error)
+    console.error('[AI Provider] ❌ Failed to parse OpenRouter JSON response:', error)
     console.error('[AI Provider] Response text:', responseText.substring(0, 500))
     return faqData
   }
 
-  console.log(`[AI Provider] ✅ Batch FAQ formatting completed with OpenAI!`)
-  return jsonData
-}
-
-/**
- * Batch format FAQs with Google Gemini
- */
-async function batchFormatFAQsWithGoogle(
-  faqData: Array<{
-    blockIndex: number
-    title?: string | null
-    items: Array<{
-      itemIndex: number
-      question: string
-      answer: string
-    }>
-  }>,
-  apiKey: string,
-  model?: string
-): Promise<Array<{
-  blockIndex: number
-  title?: string | null
-  items: Array<{
-    itemIndex: number
-    question: string
-    answer: string
-  }>
-}>> {
-  const { GoogleGenerativeAI } = await import('@google/generative-ai')
-  const genAI = new GoogleGenerativeAI(apiKey)
-  const aiModel = genAI.getGenerativeModel({ model: model || 'gemini-2.0-flash-exp' })
-
-  console.log(`[AI Provider] 🤖 Batch formatting FAQs with Google Gemini (${model || 'gemini-2.0-flash-exp'})...`)
-
-  const prompt = `You are a content formatter for Payload CMS. Your task is to format and improve FAQ content while preserving meaning and structure.
-
-CRITICAL INSTRUCTIONS:
-- Improve clarity, grammar, and readability of questions and answers
-- Keep questions concise and clear
-- Preserve the original meaning and tone
-- Do NOT change the structure or format
-- Return ONLY valid JSON, no markdown, no code blocks
-
-Input FAQ data:
-${JSON.stringify(faqData, null, 2)}
-
-Return a JSON array with the same structure, where each FAQ block has:
-- blockIndex: same as input
-- title: formatted title (or null if not provided)
-- items: array of { itemIndex: number, question: string, answer: string }
-
-Return ONLY the JSON array, nothing else:`
-
-  const result = await aiModel.generateContent(prompt)
-  const response = await result.response
-  const responseText = response.text()
-
-  // Extract JSON from response
-  let jsonText = responseText.trim()
-  if (jsonText.startsWith('```')) {
-    const lines = jsonText.split('\n')
-    const startIndex = lines.findIndex((line: string) => line.includes('json') || line.includes('['))
-    let endIndex = -1
-    for (let i = lines.length - 1; i >= 0; i--) {
-      if (lines[i].includes('```')) {
-        endIndex = i
-        break
-      }
-    }
-    if (startIndex >= 0 && endIndex > startIndex) {
-      jsonText = lines.slice(startIndex + 1, endIndex).join('\n')
-    }
-  }
-  jsonText = jsonText.trim()
-
-  let jsonData: any
-  try {
-    jsonData = JSON.parse(jsonText)
-    if (!Array.isArray(jsonData)) {
-      jsonData = [jsonData]
-    }
-  } catch (error) {
-    console.error('[AI Provider] ❌ Failed to parse Google JSON response:', error)
-    return faqData
-  }
-
-  console.log(`[AI Provider] ✅ Batch FAQ formatting completed with Google Gemini!`)
+  console.log(`[AI Provider] ✅ Batch FAQ formatting completed with OpenRouter!`)
   return jsonData
 }
 

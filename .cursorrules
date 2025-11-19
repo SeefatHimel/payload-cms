@@ -1,0 +1,48 @@
+# Cursor Rules for Payload CMS Project
+
+## AI Prompt Generation
+
+### Slash Command: `/generate-ai-prompt`
+
+**IMPORTANT:** When the user types `/generate-ai-prompt` in chat, you (the AI) should:
+1. Execute: `npm run generate:ai-prompt` in the terminal
+2. Wait for completion
+3. Confirm that `AI_PROMPT_FILE.md` was created/updated
+4. Report the file location and size
+
+**Command to run:** `npm run generate:ai-prompt`
+
+**Expected output:** Creates/updates `AI_PROMPT_FILE.md` in project root (~76KB file)
+
+**When to use:** Before sending prompts to AI, or after modifying block schemas/collections
+
+**Script location:** `scripts/generate-ai-prompt-file.ts`
+
+## Creating Posts from AI Responses
+
+When AI generates Payload CMS post data:
+1. Save the response as JSON
+2. Use the API endpoint: `POST /api/create-post-from-ai`
+3. Or use the script: `scripts/createPostFromAIResponse.ts`
+
+## Block Structure
+
+FAQ blocks must be embedded in `content.root.children` as:
+```json
+{
+  "type": "block",
+  "fields": {
+    "blockType": "faq",
+    "title": "Optional title",
+    "items": [...]
+  }
+}
+```
+
+## Key Files
+
+- `AI_PROMPT_FILE.md` - Send this to AI (regenerate after schema changes)
+- `sample-payload-seed-data.json` - Example seed data format
+- `sample-payload-api-response.json` - Example API response format
+- `scripts/generate-ai-prompt-file.ts` - Generator script
+

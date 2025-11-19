@@ -195,7 +195,7 @@ export const GoogleDocsImporter: React.FC<{ onImportSuccess?: () => void }> = ({
         />
         <label htmlFor="useAI" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
           <span>🤖</span>
-          <span>Use AI formatting (Google Gemini)</span>
+          <span>Use AI formatting (OpenRouter)</span>
         </label>
       </div>
       {useAI && (

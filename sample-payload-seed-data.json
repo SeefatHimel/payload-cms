@@ -1,0 +1,426 @@
+{
+  "description": "Sample Payload CMS seed data for a blog post with FAQ blocks. This demonstrates the exact structure needed to create posts with embedded blocks in the richText content field.",
+  "post": {
+    "title": "Getting Started with Payload CMS: A Complete Guide",
+    "slug": "getting-started-with-payload-cms",
+    "_status": "published",
+    "heroImage": "{{MEDIA_ID}}",
+    "authors": ["{{USER_ID}}"],
+    "categories": ["{{CATEGORY_ID}}"],
+    "publishedAt": "2025-01-18T12:00:00.000Z",
+    "content": {
+      "root": {
+        "type": "root",
+        "children": [
+          {
+            "type": "heading",
+            "children": [
+              {
+                "type": "text",
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Introduction to Payload CMS",
+                "version": 1
+              }
+            ],
+            "direction": "ltr",
+            "format": "",
+            "indent": 0,
+            "tag": "h2",
+            "version": 1
+          },
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "type": "text",
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Payload CMS is a powerful headless content management system built with TypeScript. It provides a flexible and developer-friendly way to manage content for modern web applications.",
+                "version": 1
+              }
+            ],
+            "direction": "ltr",
+            "format": "",
+            "indent": 0,
+            "textFormat": 0,
+            "version": 1
+          },
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "type": "text",
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "In this comprehensive guide, we'll explore the key features and best practices for working with Payload CMS, including how to use blocks for dynamic content creation.",
+                "version": 1
+              }
+            ],
+            "direction": "ltr",
+            "format": "",
+            "indent": 0,
+            "textFormat": 0,
+            "version": 1
+          },
+          {
+            "type": "heading",
+            "children": [
+              {
+                "type": "text",
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Key Features",
+                "version": 1
+              }
+            ],
+            "direction": "ltr",
+            "format": "",
+            "indent": 0,
+            "tag": "h2",
+            "version": 1
+          },
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "type": "text",
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Payload CMS offers several powerful features that make it an excellent choice for modern web development:",
+                "version": 1
+              }
+            ],
+            "direction": "ltr",
+            "format": "",
+            "indent": 0,
+            "textFormat": 0,
+            "version": 1
+          },
+          {
+            "type": "list",
+            "listType": "bullet",
+            "children": [
+              {
+                "type": "listitem",
+                "children": [
+                  {
+                    "type": "text",
+                    "detail": 0,
+                    "format": 0,
+                    "mode": "normal",
+                    "style": "",
+                    "text": "TypeScript-first architecture",
+                    "version": 1
+                  }
+                ],
+                "direction": "ltr",
+                "format": "",
+                "indent": 0,
+                "value": 1,
+                "version": 1
+              },
+              {
+                "type": "listitem",
+                "children": [
+                  {
+                    "type": "text",
+                    "detail": 0,
+                    "format": 0,
+                    "mode": "normal",
+                    "style": "",
+                    "text": "Flexible content blocks system",
+                    "version": 1
+                  }
+                ],
+                "direction": "ltr",
+                "format": "",
+                "indent": 0,
+                "value": 2,
+                "version": 1
+              },
+              {
+                "type": "listitem",
+                "children": [
+                  {
+                    "type": "text",
+                    "detail": 0,
+                    "format": 0,
+                    "mode": "normal",
+                    "style": "",
+                    "text": "Built-in authentication and access control",
+                    "version": 1
+                  }
+                ],
+                "direction": "ltr",
+                "format": "",
+                "indent": 0,
+                "value": 3,
+                "version": 1
+              }
+            ],
+            "direction": "ltr",
+            "format": "",
+            "indent": 0,
+            "version": 1
+          },
+          {
+            "type": "block",
+            "fields": {
+              "blockType": "faq",
+              "title": "Frequently Asked Questions",
+              "items": [
+                {
+                  "question": "What is Payload CMS?",
+                  "answer": {
+                    "root": {
+                      "type": "root",
+                      "children": [
+                        {
+                          "type": "paragraph",
+                          "children": [
+                            {
+                              "type": "text",
+                              "detail": 0,
+                              "format": 0,
+                              "mode": "normal",
+                              "style": "",
+                              "text": "Payload CMS is a headless content management system built with TypeScript and Node.js. It provides a self-hosted, API-first solution for managing content with a powerful admin panel and flexible data modeling capabilities.",
+                              "version": 1
+                            }
+                          ],
+                          "direction": "ltr",
+                          "format": "",
+                          "indent": 0,
+                          "textFormat": 0,
+                          "version": 1
+                        }
+                      ],
+                      "direction": "ltr",
+                      "format": "",
+                      "indent": 0,
+                      "version": 1
+                    }
+                  }
+                },
+                {
+                  "question": "How do I install Payload CMS?",
+                  "answer": {
+                    "root": {
+                      "type": "root",
+                      "children": [
+                        {
+                          "type": "paragraph",
+                          "children": [
+                            {
+                              "type": "text",
+                              "detail": 0,
+                              "format": 0,
+                              "mode": "normal",
+                              "style": "",
+                              "text": "You can install Payload CMS using npm or yarn. The easiest way is to use the official CLI:",
+                              "version": 1
+                            }
+                          ],
+                          "direction": "ltr",
+                          "format": "",
+                          "indent": 0,
+                          "textFormat": 0,
+                          "version": 1
+                        },
+                        {
+                          "type": "code",
+                          "children": [
+                            {
+                              "type": "text",
+                              "detail": 0,
+                              "format": 0,
+                              "mode": "normal",
+                              "style": "",
+                              "text": "npx create-payload-app@latest my-app",
+                              "version": 1
+                            }
+                          ],
+                          "direction": "ltr",
+                          "format": "",
+                          "indent": 0,
+                          "language": "bash",
+                          "version": 1
+                        }
+                      ],
+                      "direction": "ltr",
+                      "format": "",
+                      "indent": 0,
+                      "version": 1
+                    }
+                  }
+                },
+                {
+                  "question": "Can I use custom blocks in Payload CMS?",
+                  "answer": {
+                    "root": {
+                      "type": "root",
+                      "children": [
+                        {
+                          "type": "paragraph",
+                          "children": [
+                            {
+                              "type": "text",
+                              "detail": 0,
+                              "format": 0,
+                              "mode": "normal",
+                              "style": "",
+                              "text": "Yes! Payload CMS supports custom blocks through its rich text editor. You can create custom blocks like FAQ blocks, banner blocks, code blocks, and more. Each block can have its own fields and React component for rendering.",
+                              "version": 1
+                            }
+                          ],
+                          "direction": "ltr",
+                          "format": "",
+                          "indent": 0,
+                          "textFormat": 0,
+                          "version": 1
+                        }
+                      ],
+                      "direction": "ltr",
+                      "format": "",
+                      "indent": 0,
+                      "version": 1
+                    }
+                  }
+                },
+                {
+                  "question": "What databases does Payload CMS support?",
+                  "answer": {
+                    "root": {
+                      "type": "root",
+                      "children": [
+                        {
+                          "type": "paragraph",
+                          "children": [
+                            {
+                              "type": "text",
+                              "detail": 0,
+                              "format": 0,
+                              "mode": "normal",
+                              "style": "",
+                              "text": "Payload CMS supports multiple databases including MongoDB, PostgreSQL, and SQLite. You can choose the database adapter that best fits your project requirements.",
+                              "version": 1
+                            }
+                          ],
+                          "direction": "ltr",
+                          "format": "",
+                          "indent": 0,
+                          "textFormat": 0,
+                          "version": 1
+                        }
+                      ],
+                      "direction": "ltr",
+                      "format": "",
+                      "indent": 0,
+                      "version": 1
+                    }
+                  }
+                }
+              ]
+            },
+            "format": "",
+            "version": 2
+          },
+          {
+            "type": "heading",
+            "children": [
+              {
+                "type": "text",
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Conclusion",
+                "version": 1
+              }
+            ],
+            "direction": "ltr",
+            "format": "",
+            "indent": 0,
+            "tag": "h2",
+            "version": 1
+          },
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "type": "text",
+                "detail": 0,
+                "format": 0,
+                "mode": "normal",
+                "style": "",
+                "text": "Payload CMS is a powerful and flexible solution for managing content in modern web applications. With its TypeScript-first approach, flexible block system, and comprehensive feature set, it's an excellent choice for developers who want full control over their content management system.",
+                "version": 1
+              }
+            ],
+            "direction": "ltr",
+            "format": "",
+            "indent": 0,
+            "textFormat": 0,
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "version": 1
+      }
+    },
+    "meta": {
+      "title": "Getting Started with Payload CMS: A Complete Guide",
+      "description": "Learn everything you need to know about Payload CMS, including installation, features, and how to use custom blocks like FAQ blocks.",
+      "image": "{{MEDIA_ID}}"
+    }
+  },
+  "notes": {
+    "placeholders": {
+      "{{MEDIA_ID}}": "Replace with actual media document ID from your media collection",
+      "{{USER_ID}}": "Replace with actual user document ID from your users collection",
+      "{{CATEGORY_ID}}": "Replace with actual category document ID from your categories collection"
+    },
+    "blockStructure": {
+      "faq": {
+        "blockType": "faq",
+        "title": "Optional - FAQ section title",
+        "items": [
+          {
+            "question": "Required - The question text",
+            "answer": {
+              "root": {
+                "type": "root",
+                "children": [
+                  {
+                    "type": "paragraph",
+                    "children": [
+                      {
+                        "type": "text",
+                        "text": "Answer content in Lexical format"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "usage": "This JSON structure can be used directly with Payload CMS API or seed scripts. The content field uses Lexical editor format, and blocks are embedded as 'block' type nodes within the richText content."
+  }
+}
+

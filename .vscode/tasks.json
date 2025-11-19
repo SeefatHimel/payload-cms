@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Generate AI Prompt File",
+      "type": "shell",
+      "command": "npm run generate:ai-prompt",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": true
+      },
+      "problemMatcher": [],
+      "detail": "Generates AI_PROMPT_FILE.md with all block schemas and examples for AI to generate Payload CMS posts"
+    },
+    {
+      "label": "Create Post from AI Response",
+      "type": "shell",
+      "command": "echo 'Use the API endpoint: POST /api/create-post-from-ai'",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Reminder to use the API endpoint for creating posts from AI responses"
+    }
+  ]
+}
+

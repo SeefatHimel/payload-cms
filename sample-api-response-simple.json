@@ -1,0 +1,208 @@
+{
+  "description": "Simplified sample API responses showing different depth levels and what the FAQ block looks like in each",
+  
+  "responseDepth0": {
+    "id": 1,
+    "title": "Getting Started with Payload CMS",
+    "slug": "getting-started-with-payload-cms",
+    "heroImage": 1,
+    "authors": [1],
+    "categories": [1],
+    "content": {
+      "root": {
+        "children": [
+          {
+            "type": "block",
+            "fields": {
+              "blockType": "faq",
+              "title": "Frequently Asked Questions",
+              "items": [
+                {
+                  "question": "What is Payload CMS?",
+                  "answer": {
+                    "root": {
+                      "children": [
+                        {
+                          "type": "paragraph",
+                          "children": [
+                            {
+                              "type": "text",
+                              "text": "Payload CMS is a headless content management system."
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "responseDepth1": {
+    "id": 1,
+    "title": "Getting Started with Payload CMS",
+    "slug": "getting-started-with-payload-cms",
+    "heroImage": {
+      "id": 1,
+      "url": "/media/hero.jpg",
+      "alt": "Hero image"
+    },
+    "authors": [
+      {
+        "id": 1,
+        "name": "Demo Author",
+        "email": "demo@example.com"
+      }
+    ],
+    "categories": [
+      {
+        "id": 1,
+        "title": "Technology",
+        "slug": "technology"
+      }
+    ],
+    "content": {
+      "root": {
+        "children": [
+          {
+            "type": "block",
+            "fields": {
+              "blockType": "faq",
+              "title": "Frequently Asked Questions",
+              "items": [
+                {
+                  "question": "What is Payload CMS?",
+                  "answer": {
+                    "root": {
+                      "children": [
+                        {
+                          "type": "paragraph",
+                          "children": [
+                            {
+                              "type": "text",
+                              "text": "Payload CMS is a headless content management system."
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "faqBlockOnly": {
+    "type": "block",
+    "fields": {
+      "blockType": "faq",
+      "title": "Frequently Asked Questions",
+      "items": [
+        {
+          "question": "What is Payload CMS?",
+          "answer": {
+            "root": {
+              "type": "root",
+              "children": [
+                {
+                  "type": "paragraph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "detail": 0,
+                      "format": 0,
+                      "mode": "normal",
+                      "style": "",
+                      "text": "Payload CMS is a headless content management system built with TypeScript.",
+                      "version": 1
+                    }
+                  ],
+                  "direction": "ltr",
+                  "format": "",
+                  "indent": 0,
+                  "textFormat": 0,
+                  "version": 1
+                }
+              ],
+              "direction": "ltr",
+              "format": "",
+              "indent": 0,
+              "version": 1
+            }
+          }
+        },
+        {
+          "question": "How do I install it?",
+          "answer": {
+            "root": {
+              "type": "root",
+              "children": [
+                {
+                  "type": "paragraph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "Use: npx create-payload-app@latest",
+                      "version": 1
+                    }
+                  ],
+                  "version": 1
+                }
+              ],
+              "version": 1
+            }
+          }
+        }
+      ]
+    },
+    "format": "",
+    "version": 2
+  },
+
+  "apiCallExamples": {
+    "getSinglePost": {
+      "method": "GET",
+      "url": "/api/posts/1?depth=1",
+      "description": "Get a single post by ID with relationships populated"
+    },
+    "getPostBySlug": {
+      "method": "GET",
+      "url": "/api/posts/slug/getting-started-with-payload-cms?depth=1",
+      "description": "Get a post by slug with relationships populated"
+    },
+    "getAllPosts": {
+      "method": "GET",
+      "url": "/api/posts?depth=1&where[_status][equals]=published&limit=10",
+      "description": "Get all published posts with relationships populated"
+    },
+    "createPost": {
+      "method": "POST",
+      "url": "/api/posts",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN"
+      },
+      "body": "Use sample-payload-seed-data.json structure"
+    }
+  },
+
+  "notes": {
+    "depth": {
+      "0": "Returns only IDs for relationships",
+      "1": "Returns populated relationship objects (recommended)",
+      "2": "Returns deeply nested relationships"
+    },
+    "faqBlockLocation": "FAQ blocks are found in content.root.children array as objects with type='block' and fields.blockType='faq'",
+    "authentication": "Creating/updating posts requires authentication. Use depth=1 for best results when fetching."
+  }
+}
+

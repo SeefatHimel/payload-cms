@@ -1,0 +1,34 @@
+{
+  "id": "gen-1763522204-MLxGCDfJCd9MUQAiYS7H",
+  "provider": "OpenAI",
+  "model": "openai/gpt-4o-mini",
+  "object": "chat.completion",
+  "created": 1763522204,
+  "choices": [
+    {
+      "logprobs": null,
+      "finish_reason": "stop",
+      "native_finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```\nAdventures of Terra Nova\n\n“Adventures of Terra Nova” is an epic open-world strategy game where players build empires, form alliances, and explore unknown territories. Lead your civilization to glory or face the challenges of a dynamic, ever-changing world.\n\nIntroduction\n\nIn Terra Nova, every decision matters. Manage resources, expand your cities, and engage in diplomacy or warfare. The game combines real-time strategy with turn-based elements to create a unique experience.\n\nGetting Started\n\nPrerequisites\n\n• PC or Mac with minimum specs:\n\n• 8GB RAM\n\n• Intel i5 processor\n\n• 50GB free storage\n\n• Stable internet connection for multiplayer mode\n\n• Terra Nova game client installed\n\nInstallation Steps\n\n• Download the game from the official website:\nhttps://www.terranova-game.com\n\n• Run the installer and follow on-screen instructions\n\n• Launch the game and create your account\n\n• Choose your starting civilization\n\nGameplay Features\n\n• Civilizations: Choose from Humans, Elves, Dwarves, or Orcs\n\n• Alliances: Team up with other players or AI factions\n\n• Exploration: Discover hidden lands, treasures, and quests\n\n• Combat: Real-time battles with strategic planning\n\n• Economy: Trade resources and manage city production\n\n##BANNER\n\n⚠️ Pro Tip: Always scout surrounding territories before expanding to avoid ambushes.\n\n##CODE\n\n# Simple AI logic for troop movement\n\ndef move_troops(troops, target):\n\n    for unit in troops:\n\n        if unit.position != target:\n\n            unit.move_towards(target)\n\n##MEDIA\n\n(Insert image of game map here)  \nCaption: Explore the vast lands of Terra Nova.\n\nConclusion\n\nTerra Nova offers endless adventures, strategic gameplay, and a vibrant online community. Start your journey today, explore unknown territories, and become the ultimate ruler of Terra Nova!\n\n✅ Import Checklist\n\n• H1 title: Adventures of Terra Nova\n\n• H2 headings for major sections (Introduction, Getting Started, Gameplay Features, FAQ, Conclusion)\n\n• H3 headings for subsections (Prerequisites, Installation Steps)\n\n• FAQ section formatted correctly\n\n• Code blocks and banner included\n\n• Media captions added\n\n##FAQ\n\nFrequently Asked Questions\n\nWhat is the main objective of Terra Nova?\nThe main objective of Terra Nova is to build your civilization, explore new territories, and engage in strategic battles.\n\nCan I play Terra Nova solo?\nYes, you can play Terra Nova solo, but multiplayer mode offers a more dynamic experience.\n\nWhat platforms is Terra Nova available on?\nTerra Nova is available on Windows and Mac.\n\nIs there a mobile version of Terra Nova?\nCurrently, there is no mobile version of Terra Nova available.\n```",
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "system_fingerprint": "fp_560af6e559",
+  "usage": {
+    "prompt_tokens": 1304,
+    "completion_tokens": 547,
+    "total_tokens": 1851,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  }
+}

@@ -12,6 +12,9 @@ public/media/
 public/robots.txt
 public/sitemap*.xml
 
+# Debug files (saved Google Docs API responses)
+# debug/
+
 
 # Playwright
 node_modules/

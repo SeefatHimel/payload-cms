@@ -1,0 +1,34 @@
+{
+  "id": "gen-1763522195-WqpMyCli3WBkpTmxSvFB",
+  "provider": "OpenAI",
+  "model": "openai/gpt-4o-mini",
+  "object": "chat.completion",
+  "created": 1763522195,
+  "choices": [
+    {
+      "logprobs": null,
+      "finish_reason": "stop",
+      "native_finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "[\n  {\n    \"blockIndex\": 0,\n    \"title\": \"Frequently Asked Questions\",\n    \"items\": [\n      {\n        \"itemIndex\": 0,\n        \"question\": \"On which platforms is Terra Nova available?\",\n        \"answer\": \"Terra Nova is available on Windows and Mac. A mobile companion app is planned for the next release.\"\n      },\n      {\n        \"itemIndex\": 1,\n        \"question\": \"Is multiplayer gameplay available?\",\n        \"answer\": \"Yes, multiplayer mode allows you to form alliances, trade, and engage in real-time battles with other players.\"\n      },\n      {\n        \"itemIndex\": 2,\n        \"question\": \"How can I join an alliance?\",\n        \"answer\": \"Navigate to the 'Alliance' menu in-game, browse the available alliances, and request to join. Alliance leaders can accept or decline requests.\"\n      },\n      {\n        \"itemIndex\": 3,\n        \"question\": \"Are there in-game purchases?\",\n        \"answer\": \"Yes, optional cosmetic items and expansion packs are available, but the core gameplay is free.\"\n      },\n      {\n        \"itemIndex\": 4,\n        \"question\": \"Is there a tutorial for new players?\",\n        \"answer\": \"Absolutely! The first mission acts as a tutorial, and in-game tips assist new players in getting started.\"\n      }\n    ]\n  }\n]",
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "system_fingerprint": "fp_560af6e559",
+  "usage": {
+    "prompt_tokens": 456,
+    "completion_tokens": 284,
+    "total_tokens": 740,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  }
+}
